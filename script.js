@@ -1,5 +1,3 @@
-
-
 // Smooth scroll for navigation
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -223,8 +221,7 @@ const destinations = {
     }
 };
 
-// EXISTING openDestinationPage FUNCTION-LA INTHA LOGIC-A REPLACE PANNINGA
-// Cleaned & Master Destination Page Logic
+// ✅ FIXED & OPTIMIZED openDestinationPage Function
 function openDestinationPage(state) {
     const data = destinations[state];
     if (!data) return;
@@ -232,7 +229,6 @@ function openDestinationPage(state) {
     const detailPage = document.getElementById("detailPage");
     const placesGrid = document.getElementById("places-grid");
     
-    // Header updates
     document.getElementById("detail-title").innerHTML = data.title;
     document.getElementById("detail-subtitle").innerText = data.subtitle;
 
@@ -242,20 +238,36 @@ function openDestinationPage(state) {
     for (const [city, cityData] of Object.entries(data.places)) {
         const card = document.createElement("div");
         card.className = "safari-card";
-        card.style.backgroundImage = `url('${cityData.image}')`;
+        
+        // ✅ KEY FIX: Desktop-ku background image directly on safari-card
+        if (!isMobile) {
+            card.style.backgroundImage = `url('${cityData.image}')`;
+            card.style.backgroundSize = "cover";
+            card.style.backgroundPosition = "center";
+        }
 
-        // Mobile-la click panna detail open aaganum
-        card.onclick = () => { if(isMobile) viewCityDetails(state, city); };
+        // ✅ Mobile-ku separate image div
+        if (isMobile) {
+            const imgDiv = document.createElement("div");
+            imgDiv.className = "card-img-top";
+            imgDiv.style.backgroundImage = `url('${cityData.image}')`;
+            imgDiv.style.width = "100%";
+            imgDiv.style.height = "55%";
+            imgDiv.style.backgroundSize = "cover";
+            imgDiv.style.backgroundPosition = "center";
+            imgDiv.style.backgroundRepeat = "no-repeat";
+            card.appendChild(imgDiv);
+        }
 
         const destInfo = document.createElement('div');
         destInfo.className = 'dest-info';
-
+        
         destInfo.innerHTML = `
-            <h1 style="color: #d4af37;">${city.toUpperCase()}</h1>
+            <h1>${city.toUpperCase()}</h1>
             <p>${cityData.description}</p>
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <button class="btn-gold" onclick="event.stopPropagation(); showBookingOptions('${state}', '${city}')">BOOK NOW</button>
-                <button class="btn-white" onclick="event.stopPropagation(); viewCityDetails('${state}', '${city}')">VIEW PLACES</button>
+            <div class="card-btns">
+                <button class="btn-gold" onclick="event.stopPropagation(); showBookingOptions('${state}', '${city}')">BOOK</button>
+                <button class="btn-white" onclick="event.stopPropagation(); viewCityDetails('${state}', '${city}')">VIEW</button>
             </div>
         `;
 
@@ -263,7 +275,6 @@ function openDestinationPage(state) {
         placesGrid.appendChild(card);
     }
 
-    // Desktop-ku mattum navigation buttons
     if (!isMobile) {
         const navDiv = document.createElement("div");
         navDiv.className = "slider-nav";
@@ -276,7 +287,7 @@ function openDestinationPage(state) {
 
     detailPage.style.display = "block";
     setTimeout(() => detailPage.style.opacity = "1", 10);
-}   
+}
 
 // Slider Movement Logic (Intha logic constant-ah irukatum for desktop)
 function moveSlider(direction) {
@@ -421,7 +432,7 @@ function showBookingOptions(state, city = '') {
         const days = document.getElementById("booking-days").value;
         
         const msg = `Hi Fundun Holidays, I'm ${name}. I want to book a package for ${location} for ${persons} persons for ${days} days. My WhatsApp: ${phone}`;
-
+        sendToWhatsApp(msg);
     });
     
     window.closeBookingModal = () => {
@@ -635,90 +646,6 @@ document.addEventListener('mousemove', e => {
     document.body.style.setProperty('--y', e.clientY + 'px');
 });
 
-// 2. Updated openDestinationPage with "Social Validation" logic
-function openDestinationPage(state) {
-    const data = destinations[state];
-    if (!data) return;
-
-    const detailPage = document.getElementById("detailPage");
-    const placesGrid = document.getElementById("places-grid");
-    
-    // Header updates
-    document.getElementById("detail-title").innerHTML = data.title;
-    document.getElementById("detail-subtitle").innerText = data.subtitle;
-
-    // Clear and build the slider
-    placesGrid.innerHTML = "";
-
-    // 1. Create Navigation Buttons
-    const navDiv = document.createElement("div");
-    navDiv.className = "slider-nav";
-    navDiv.innerHTML = `
-        <button onclick="moveSlider('prev')"><i class="fas fa-arrow-left"></i></button>
-        <button onclick="moveSlider('next')"><i class="fas fa-arrow-right"></i></button>
-    `;
-
-    // 2. Generate Cards from Destination Data
-    for (const [city, cityData] of Object.entries(data.places)) {
-        const card = document.createElement("div");
-        card.className = "safari-card";
-        card.style.backgroundImage = `url('${cityData.image}')`;
-
-        const destInfo = document.createElement('div');
-        destInfo.className = 'dest-info';
-
-        const title = document.createElement('h1');
-        title.style.cssText = 'font-size: 50px; font-weight: 800; color: #d4af37;';
-        title.textContent = city.toUpperCase();
-
-        const desc = document.createElement('p');
-        desc.style.cssText = 'margin: 20px 0; font-size: 16px; line-height: 1.6;';
-        desc.textContent = cityData.description;
-
-        const btnWrap = document.createElement('div');
-        btnWrap.style.cssText = 'display:flex; gap:15px;';
-
-        const reserveBtn = document.createElement('button');
-        reserveBtn.className = 'btn-gold';
-        reserveBtn.textContent = 'RESERVE NOW';
-        reserveBtn.addEventListener('click', (e) => { e.stopPropagation(); showBookingOptions(state, city); });
-
-        const viewBtn = document.createElement('button');
-        viewBtn.className = 'btn-white';
-        viewBtn.style.cssText = 'background:transparent; border:1px solid #fff; color:#fff; border-radius:30px; padding:10px 20px; cursor:pointer;';
-        viewBtn.textContent = 'VIEW PLACES';
-        viewBtn.addEventListener('click', (e) => { e.stopPropagation(); viewCityDetails(state, city); });
-
-        btnWrap.appendChild(reserveBtn);
-        btnWrap.appendChild(viewBtn);
-
-        destInfo.appendChild(title);
-        destInfo.appendChild(desc);
-        destInfo.appendChild(btnWrap);
-
-        card.appendChild(destInfo);
-        placesGrid.appendChild(card);
-    }
-
-    // Add navigation to grid
-    placesGrid.appendChild(navDiv);
-
-    // Show Detail Page
-    detailPage.style.display = "block";
-    setTimeout(() => detailPage.style.opacity = "1", 10);
-}
-
-// 3. Slider Movement Logic
-function moveSlider(direction) {
-    const items = document.querySelectorAll('.safari-card');
-    const grid = document.getElementById('places-grid');
-    
-    if (direction === 'next') {
-        grid.appendChild(items[0]); // Move first to last
-    } else {
-        grid.prepend(items[items.length - 1]); // Move last to first
-    }
-}
 function openServiceBooking(serviceName) {
     // Service name-aa location field-la pass pannrom
     showBookingOptions(serviceName);
