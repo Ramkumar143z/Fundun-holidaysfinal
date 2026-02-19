@@ -76,27 +76,13 @@
         "longitude": "78.6569"
       },
       "areaServed": [
-        {
-          "@type": "Place",
-          "name": "Tamil Nadu"
-        },
-        {
-          "@type": "Place",
-          "name": "Kerala"
-        },
-        {
-          "@type": "Place",
-          "name": "Karnataka"
-        },
-        {
-          "@type": "Place",
-          "name": "Hyderabad"
-        }
+        {"@type": "Place","name": "Tamil Nadu"},
+        {"@type": "Place","name": "Kerala"},
+        {"@type": "Place","name": "Karnataka"},
+        {"@type": "Place","name": "Hyderabad"}
       ],
       "priceRange": "₹₹",
-      "sameAs": [
-        "https://www.instagram.com/fundun_holidays"
-      ],
+      "sameAs": ["https://www.instagram.com/fundun_holidays"],
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.8",
@@ -105,77 +91,33 @@
     }
     </script>
     
-    <!-- Breadcrumb Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://www.fundunholidays.com"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Destinations",
-          "item": "https://www.fundunholidays.com#destinations"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Services",
-          "item": "https://www.fundunholidays.com#services"
-        }
+        {"@type": "ListItem","position": 1,"name": "Home","item": "https://www.fundunholidays.com"},
+        {"@type": "ListItem","position": 2,"name": "Destinations","item": "https://www.fundunholidays.com#destinations"},
+        {"@type": "ListItem","position": 3,"name": "Services","item": "https://www.fundunholidays.com#services"}
       ]
     }
     </script>
     
-    <!-- Service Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Service",
       "serviceType": "Tour Packages",
-      "provider": {
-        "@type": "TravelAgency",
-        "name": "Fundun Holidays"
-      },
+      "provider": {"@type": "TravelAgency","name": "Fundun Holidays"},
       "areaServed": "South India",
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
         "name": "Tour Packages",
         "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Trip",
-              "name": "Ooty Tour Package"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Trip",
-              "name": "Munnar Honeymoon Package"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Trip",
-              "name": "Kerala Backwaters Package"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Trip",
-              "name": "Coorg Coffee Trails"
-            }
-          }
+          {"@type": "Offer","itemOffered": {"@type": "Trip","name": "Ooty Tour Package"}},
+          {"@type": "Offer","itemOffered": {"@type": "Trip","name": "Munnar Honeymoon Package"}},
+          {"@type": "Offer","itemOffered": {"@type": "Trip","name": "Kerala Backwaters Package"}},
+          {"@type": "Offer","itemOffered": {"@type": "Trip","name": "Coorg Coffee Trails"}}
         ]
       }
     }
@@ -193,6 +135,143 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://res.cloudinary.com">
+
+    <!-- ✅ EXPLORE ALL BUTTON STYLES — UPDATED (English, Compact, Better Animation) -->
+    <style>
+        /* ── Wrapper ── */
+        .explore-all-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.04), rgba(212,175,55,0.01));
+            border: 1px dashed rgba(212,175,55,0.25);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            animation: wrapperFadeIn 0.6s ease both;
+        }
+
+        @keyframes wrapperFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .explore-all-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(212,175,55,0.05) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        /* ── Instruction text ── */
+        .explore-all-instruction {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #999;
+            font-size: 13px;
+            font-weight: 400;
+            text-align: center;
+            line-height: 1.5;
+            max-width: 480px;
+        }
+
+        .explore-all-instruction i {
+            color: #d4af37;
+            font-size: 14px;
+            flex-shrink: 0;
+            animation: iconPop 2s ease infinite;
+        }
+
+        @keyframes iconPop {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.18); }
+        }
+
+        /* ── Main Button ── */
+        .btn-explore-all {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #d4af37, #b8962e);
+            color: #000;
+            border: none;
+            padding: 13px 32px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(212,175,55,0.3);
+            overflow: hidden;
+        }
+
+        /* Shimmer sweep */
+        .btn-explore-all::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 45%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.22), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.55s ease;
+        }
+
+        .btn-explore-all:hover::before { left: 155%; }
+
+        .btn-explore-all:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 14px 40px rgba(212,175,55,0.5);
+            letter-spacing: 1.8px;
+        }
+
+        .btn-explore-all i:first-child { font-size: 14px; }
+
+        .btn-explore-all i:last-child {
+            font-size: 13px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-explore-all:hover i:last-child { transform: translateX(5px); }
+
+        /* ── Count Badge ── */
+        .explore-all-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(212,175,55,0.08);
+            border: 1px solid rgba(212,175,55,0.2);
+            color: #d4af37;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .explore-all-count i { font-size: 10px; }
+
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            .explore-all-wrapper {
+                margin-top: 18px;
+                padding: 16px 14px;
+                gap: 9px;
+            }
+            .explore-all-instruction { font-size: 12px; }
+            .btn-explore-all { padding: 11px 24px; font-size: 12px; }
+            .explore-all-count { font-size: 10px; }
+        }
+    </style>
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
 
@@ -364,17 +443,14 @@
     <button class="filter-btn" data-filter="hyderabad">Hyderabad</button>
 </div>
 
-<!-- TAMIL NADU -->
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🎯 TAMIL NADU DESTINATION CARDS - FULL CLICKABLE VERSION
+   🎯 TAMIL NADU
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-
-<!-- TAMIL NADU -->
 <div class="state-container" data-category="tamil-nadu">
 <h3 class="state-title">Tamil Nadu <span class="gold">Tour Packages</span></h3>
 <div class="dest-grid">
 
-<!-- OOTY - FULL CLICKABLE -->
+<!-- OOTY -->
 <div class="dest-card" data-aos="fade-up" onclick="openDestinationPage('Tamil Nadu')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850347/Ooty_sm1awg.png');">
 <div class="mini-slides">
@@ -410,7 +486,7 @@
 </div>
 </div>
 
-<!-- KODAIKANAL - FULL CLICKABLE -->
+<!-- KODAIKANAL -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="100" onclick="openDestinationPage('Tamil Nadu')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850389/kodaikanal_rrm80l.png');">
 <div class="mini-slides">
@@ -446,7 +522,7 @@
 </div>
 </div>
 
-<!-- KANYAKUMARI - FULL CLICKABLE -->
+<!-- KANYAKUMARI -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="200" onclick="openDestinationPage('Tamil Nadu')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850491/Kannayakumari_dsszcl.png');">
 <div class="mini-slides">
@@ -482,20 +558,35 @@
 </div>
 </div>
 
-</div>
+</div><!-- end dest-grid -->
+
+<!-- ✅ EXPLORE ALL TAMIL NADU BUTTON — UPDATED -->
+<div class="explore-all-wrapper" data-aos="fade-up">
+    <div class="explore-all-instruction">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>That's not all! Tamil Nadu has <strong style="color:#d4af37;">6 amazing destinations</strong> waiting for you — hills, beaches, heritage &amp; more.</span>
+    </div>
+    <button class="btn-explore-all" onclick="openDestinationPage('Tamil Nadu')">
+        <i class="fas fa-compass"></i>
+        Explore All Tamil Nadu
+        <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="explore-all-count">
+        <i class="fas fa-map-pin"></i>
+        6 Destinations Available
+    </div>
 </div>
 
-<!-- KERALA -->
+</div><!-- end state-container -->
+
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🌴 KERALA DESTINATION CARDS - FULL CLICKABLE VERSION
+   🌴 KERALA
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-
-<!-- KERALA -->
 <div class="state-container" data-category="kerala">
 <h3 class="state-title">Kerala <span class="gold">Tour Packages</span></h3>
 <div class="dest-grid">
 
-<!-- MUNNAR - FULL CLICKABLE -->
+<!-- MUNNAR -->
 <div class="dest-card" data-aos="fade-up" onclick="openDestinationPage('kerala')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850359/munnar_bjo4pq.png');">
 <div class="mini-slides">
@@ -531,7 +622,7 @@
 </div>
 </div>
 
-<!-- ALLEPPEY - FULL CLICKABLE -->
+<!-- ALLEPPEY -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="100" onclick="openDestinationPage('kerala')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850439/alleppey_eg4fs5.png');">
 <div class="mini-slides">
@@ -567,7 +658,7 @@
 </div>
 </div>
 
-<!-- WAYANAD - FULL CLICKABLE -->
+<!-- WAYANAD -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="200" onclick="openDestinationPage('kerala')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850416/wayanadu_gpawkt.png');">
 <div class="mini-slides">
@@ -603,20 +694,35 @@
 </div>
 </div>
 
-</div>
+</div><!-- end dest-grid -->
+
+<!-- ✅ EXPLORE ALL KERALA BUTTON — UPDATED -->
+<div class="explore-all-wrapper" data-aos="fade-up">
+    <div class="explore-all-instruction">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>There's more! Kerala has <strong style="color:#d4af37;">8 stunning destinations</strong> — backwaters, hills, beaches &amp; wildlife.</span>
+    </div>
+    <button class="btn-explore-all" onclick="openDestinationPage('kerala')">
+        <i class="fas fa-compass"></i>
+        Explore All Kerala
+        <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="explore-all-count">
+        <i class="fas fa-map-pin"></i>
+        8 Destinations Available
+    </div>
 </div>
 
-<!-- KARNATAKA -->
+</div><!-- end state-container -->
+
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🏛️ KARNATAKA DESTINATION CARDS - FULL CLICKABLE VERSION
+   🏛️ KARNATAKA
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-
-<!-- KARNATAKA -->
 <div class="state-container" data-category="karnataka">
 <h3 class="state-title">Karnataka <span class="gold">Tour Packages</span></h3>
 <div class="dest-grid">
 
-<!-- MYSORE - FULL CLICKABLE -->
+<!-- MYSORE -->
 <div class="dest-card" data-aos="fade-up" onclick="openDestinationPage('karnataka')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769851229/mysore_aatmtu.png');">
 <div class="mini-slides">
@@ -652,7 +758,7 @@
 </div>
 </div>
 
-<!-- COORG - FULL CLICKABLE -->
+<!-- COORG -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="100" onclick="openDestinationPage('karnataka')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769942817/coorg_hc1qce.jpg');">
 <div class="mini-slides">
@@ -688,7 +794,7 @@
 </div>
 </div>
 
-<!-- GOA - FULL CLICKABLE -->
+<!-- GOA -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="200" onclick="openDestinationPage('karnataka')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769626372/goa_eba8v5.png');">
 <div class="mini-slides">
@@ -724,20 +830,35 @@
 </div>
 </div>
 
-</div>
+</div><!-- end dest-grid -->
+
+<!-- ✅ EXPLORE ALL KARNATAKA BUTTON — UPDATED -->
+<div class="explore-all-wrapper" data-aos="fade-up">
+    <div class="explore-all-instruction">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>There's more! Karnataka has <strong style="color:#d4af37;">8 incredible destinations</strong> — forts, coffee estates, beaches &amp; forests.</span>
+    </div>
+    <button class="btn-explore-all" onclick="openDestinationPage('karnataka')">
+        <i class="fas fa-compass"></i>
+        Explore All Karnataka
+        <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="explore-all-count">
+        <i class="fas fa-map-pin"></i>
+        8 Destinations Available
+    </div>
 </div>
 
-<!-- HYDERABAD -->
+</div><!-- end state-container -->
+
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🕌 HYDERABAD DESTINATION CARDS - FULL CLICKABLE VERSION
+   🕌 HYDERABAD
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-
-<!-- HYDERABAD -->
 <div class="state-container" data-category="hyderabad">
 <h3 class="state-title">Hyderabad <span class="gold">Tour Packages</span></h3>
 <div class="dest-grid">
 
-<!-- CHARMINAR - FULL CLICKABLE -->
+<!-- CHARMINAR -->
 <div class="dest-card" data-aos="fade-up" onclick="openDestinationPage('Hyderabad')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769666577/charmina_bpg1wb.jpg');">
 <div class="mini-slides">
@@ -773,7 +894,7 @@
 </div>
 </div>
 
-<!-- GOLCONDA - FULL CLICKABLE -->
+<!-- GOLCONDA -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="100" onclick="openDestinationPage('Hyderabad')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769666704/golgonda_aqxzrx.jpg');">
 <div class="mini-slides">
@@ -809,7 +930,7 @@
 </div>
 </div>
 
-<!-- RAMOJI - FULL CLICKABLE -->
+<!-- RAMOJI -->
 <div class="dest-card" data-aos="fade-up" data-aos-delay="200" onclick="openDestinationPage('Hyderabad')" style="cursor: pointer;">
 <div class="dest-img" style="background-image:url('https://res.cloudinary.com/drlg1t6pk/image/upload/v1769666935/ramoji_kdnuqd.jpg');">
 <div class="mini-slides">
@@ -845,8 +966,26 @@
 </div>
 </div>
 
+</div><!-- end dest-grid -->
+
+<!-- ✅ EXPLORE ALL HYDERABAD BUTTON — UPDATED -->
+<div class="explore-all-wrapper" data-aos="fade-up">
+    <div class="explore-all-instruction">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>There's more! Hyderabad has <strong style="color:#d4af37;">5 iconic destinations</strong> — history, culture, food &amp; entertainment.</span>
+    </div>
+    <button class="btn-explore-all" onclick="openDestinationPage('Hyderabad')">
+        <i class="fas fa-compass"></i>
+        Explore All Hyderabad
+        <i class="fas fa-arrow-right"></i>
+    </button>
+    <div class="explore-all-count">
+        <i class="fas fa-map-pin"></i>
+        5 Destinations Available
+    </div>
 </div>
-</div>
+
+</div><!-- end state-container -->
 
 </div>
 </section>
@@ -1065,7 +1204,6 @@
 </section>
 
 <!-- DESTINATION DETAIL PAGE -->
-<!-- DESTINATION DETAIL PAGE WITH FOOTER -->
 <div id="detailPage" class="detail-page-overlay" style="display:none;">
   <div class="detail-header">
     <button class="btn-back" onclick="closeDetailPage()">
@@ -1155,7 +1293,7 @@
     </div>
     
     <div class="footer-bottom">
-      <p>&copy; 2026 Fundun Holidays. All Rights Reserved. | Made with <span class="gold">❤</span> in India</p>
+      <p>&copy; 2020 Fundun Holidays. All Rights Reserved. | Made with <span class="gold">❤</span> in India</p>
     </div>
   </footer>
 
@@ -1221,7 +1359,7 @@
   </div>
   
   <div class="footer-bottom">
-    <p>&copy; 2026 Fundun Holidays. All Rights Reserved. | Made with <span class="gold">❤</span> in India</p>
+    <p>&copy; 2020 Fundun Holidays. All Rights Reserved. | Made with <span class="gold">❤</span> in India</p>
   </div>
 </footer>
 
@@ -1229,5 +1367,4 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="script.js"></script>
 </body>
-
 </html>
