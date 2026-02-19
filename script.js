@@ -1,127 +1,133 @@
-// Smooth scroll for navigation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🌴 FUNDUN HOLIDAYS - COMPLETE SCRIPT (ALL FEATURES)
+//  ✅ Gallery with hover pause + click lightbox
+//  ✅ WhatsApp booking form
+//  ✅ Destination pages
+//  ✅ All errors fixed
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  📋 SMOOTH SCROLL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
 });
-// Scroll Reveal Logic (throttled with requestAnimationFrame, passive listener)
-let _scrollTicking = false;
-window.addEventListener('scroll', function() {
-    if (!_scrollTicking) {
-        window.requestAnimationFrame(function() {
-            reveal();
-            _scrollTicking = false;
-        });
-        _scrollTicking = true;
-    }
-}, { passive: true });
 
-function reveal() {
-    var reveals = document.querySelectorAll('.section, .card, .service-card, .about-text');
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🔧 ABOUT PAGE TOGGLE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    for (var i = 0; i < reveals.length; i++) {
-        var windowHeight = window.innerHeight;
-        var revealTop = reveals[i].getBoundingClientRect().top;
-        var revealPoint = 150;
-
-        if (revealTop < windowHeight - revealPoint) {
-            reveals[i].classList.add('active');
-        }
+function toggleAbout(show) {
+    const aboutPage = document.getElementById("aboutPage");
+    if (!aboutPage) return;
+    if (show) {
+        aboutPage.style.display = "block";
+        aboutPage.classList.add("active");
+        document.body.classList.add("overlay-open");
+        setTimeout(() => { aboutPage.style.opacity = "1"; }, 10);
+    } else {
+        aboutPage.style.opacity = "0";
+        aboutPage.classList.remove("active");
+        document.body.classList.remove("overlay-open");
+        setTimeout(() => { aboutPage.style.display = "none"; }, 300);
     }
 }
 
-// Initial check on load
-window.onload = reveal;
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  💖 WISHLIST
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-// Calculator logic (same as before but with a small bounce effect)
-function calculateTotal() {
-    const resultDiv = document.getElementById("calc-result");
-    resultDiv.style.opacity = "0";
-    
-    setTimeout(() => {
-        const destinationRate = document.getElementById("dest-select").value;
-        const travelers = document.getElementById("travelers").value;
-
-        if (travelers > 0) {
-            const total = destinationRate * travelers;
-            resultDiv.innerHTML = `
-                <div style="transform: scale(1.1); transition: 0.3s; color: #c5a059; font-weight: bold;">
-                    <p>EXCLUSIVE QUOTE</p>
-                    <h2 style="font-size: 2.5rem;">₹${total.toLocaleString('en-IN')}</h2>
-                </div>
-            `;
-            resultDiv.style.opacity = "1";
-        }
-    }, 300);
+function toggleWishlist(element) {
+    const icon = element.querySelector('i');
+    if (icon.classList.contains('far')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        element.style.background = 'rgba(212, 175, 55, 0.2)';
+        element.style.borderColor = '#d4af37';
+        showQuickNotification('Added to wishlist! ❤️');
+    } else {
+        icon.classList.remove('fas');
+        icon.classList.add('far');
+        element.style.background = 'rgba(0, 0, 0, 0.6)';
+        element.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+        showQuickNotification('Removed from wishlist');
+    }
 }
 
-// Destination data
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🗺️ DESTINATION DATA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 const destinations = {
     "Tamil Nadu": {
-    "title": "Tamil Nadu Destinations",
-    "subtitle": "Explore the rich culture and natural beauty of Tamil Nadu",
-    "places": {
-        "Ooty": {
-            description: "Ooty, also known as Udhagamandalam, is a popular hill station in Tamil Nadu famous for its tea estates, botanical gardens, and colonial architecture.",
-            image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850347/Ooty_sm1awg.png",
-            places: ["Boat House", "Pykara Dam", "Pykara Lake", "Rose Garden", "Tea Museum", "Pine Forest", "Shooting Point", "Karnataka Garden", "Doddapetta Peak"]
-        },
-        "Kodaikanal": {
-            description: "Kodaikanal is a charming hill town known for its pristine lakes, waterfalls, and scenic viewpoints.",
-            image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850389/kodaikanal_rrm80l.png",
-            places: ["Silver Falls", "Kodaikanal Lake", "Bryant Park", "Coakers Park", "Poombarai", "Kookal", "Pillar Rock", "Guna Caves"]
-        },
-        "Yercaud": {
-            description: "Yercaud is a serene hill station known for its coffee plantations, lakes, and panoramic views.",
-            image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850504/yercadu_vpquei.png",
-            places: ["Yercaud Lake", "Pagoda Point", "Loop Road", "Bears Cave", "Kiliyur Water Falls", "Servarayan Temple"]
-        },
-        "Kanyakumari": {
-            description: "Kanyakumari is the southernmost tip of India, famous for its stunning sunrise and sunset views, temples, and memorials.",
-            image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850491/Kannayakumari_dsszcl.png",
-            places: ["Thiruvalluvar Statue", "Vivekananda Memorial Rock", "Sunset View Point", "Beach", "Padmanabhapuram Palace", "Papanasam Temple", "Manimuthar Dam", "Kuttralam"]
-        },
-        "Chennai": {
-            description: "Chennai, the capital of Tamil Nadu, is a vibrant city with rich history, temples, beaches, and modern attractions.",
-            image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850626/chennai_tyxhra.png",
-            places: ["Marina Beach", "Mahabalipuram", "Santhome Church", "Birla Planetorium", "Elliotts Beach", "Kapaleeshwar Temple", "VGP Amusement Park"]
-        },
-        "Pondicherry": {
-            description: "Pondicherry, a former French colony, offers a blend of Indian and French cultures with beautiful beaches and colonial architecture.",
-            image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850641/pondicherry_ffgflu.png",
-            places: ["French Colony", "Paradise Beach", "Sacred Heart Basilica", "Rock Beach", "Auroville Beach", "Promenade Beach", "Chunnambar Boat House"]
+        "title": "Tamil Nadu Destinations",
+        "subtitle": "Explore the rich culture and natural beauty of Tamil Nadu",
+        "places": {
+            "Ooty": {
+                description: "Ooty, also known as Udhagamandalam, is a popular hill station in Tamil Nadu famous for its tea estates, botanical gardens, and colonial architecture.",
+                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850347/Ooty_sm1awg.png",
+                places: ["Boat House", "Pykara Dam", "Pykara Lake", "Rose Garden", "Tea Museum", "Pine Forest", "Shooting Point", "Karnataka Garden", "Doddapetta Peak"]
+            },
+            "Kodaikanal": {
+                description: "Kodaikanal is a charming hill town known for its pristine lakes, waterfalls, and scenic viewpoints.",
+                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850389/kodaikanal_rrm80l.png",
+                places: ["Silver Falls", "Kodaikanal Lake", "Bryant Park", "Coakers Park", "Poombarai", "Kookal", "Pillar Rock", "Guna Caves"]
+            },
+            "Yercaud": {
+                description: "Yercaud is a serene hill station known for its coffee plantations, lakes, and panoramic views.",
+                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850504/yercadu_vpquei.png",
+                places: ["Yercaud Lake", "Pagoda Point", "Loop Road", "Bears Cave", "Kiliyur Water Falls", "Servarayan Temple"]
+            },
+            "Kanyakumari": {
+                description: "Kanyakumari is the southernmost tip of India, famous for its stunning sunrise and sunset views.",
+                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850491/Kannayakumari_dsszcl.png",
+                places: ["Thiruvalluvar Statue", "Vivekananda Memorial Rock", "Sunset View Point", "Beach", "Padmanabhapuram Palace", "Papanasam Temple", "Manimuthar Dam", "Kuttralam"]
+            },
+            "Chennai": {
+                description: "Chennai, the capital of Tamil Nadu, is a vibrant city with rich history, temples, beaches, and modern attractions.",
+                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850626/chennai_tyxhra.png",
+                places: ["Marina Beach", "Mahabalipuram", "Santhome Church", "Birla Planetorium", "Elliotts Beach", "Kapaleeshwar Temple", "VGP Amusement Park"]
+            },
+            "Pondicherry": {
+                description: "Pondicherry, a former French colony, offers a blend of Indian and French cultures with beautiful beaches.",
+                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850641/pondicherry_ffgflu.png",
+                places: ["French Colony", "Paradise Beach", "Sacred Heart Basilica", "Rock Beach", "Auroville Beach", "Promenade Beach", "Chunnambar Boat House"]
+            }
         }
-    }
     },
     "kerala": {
         title: "Kerala Destinations",
         subtitle: "Experience God's Own Country with its backwaters and hills",
         places: {
             "Cochin": {
-                description: "Cochin, also known as Kochi, is a vibrant city blending history, culture, and modernity with Chinese fishing nets and colonial architecture.",
+                description: "Cochin, also known as Kochi, is a vibrant city blending history, culture, and modernity.",
                 image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239789/cochi_m11tfv.jpg",
                 places: ["Chotanikara Bhagavathy Temple", "Athi Rampadi Water Falls", "Cherai Beach", "Mattancherry Palace", "Hill Palace Museum", "Wonderla", "Bolgatti Palace", "Lulu Mall", "Vypen Beach"]
             },
             "Munnar": {
-                description: "Munnar is a picturesque hill station famous for its sprawling tea plantations, misty mountains, and wildlife sanctuaries.",
+                description: "Munnar is a picturesque hill station famous for its sprawling tea plantations and misty mountains.",
                 image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850359/munnar_bjo4pq.png",
                 places: ["Mattupetty Dam", "Tea Museum", "Echo Point", "Top Station", "Kundala Lake", "Photo Point", "Rose Garden"]
             },
             "Wayanad": {
-                description: "Wayanad is a district known for its wildlife, waterfalls, and ancient caves, offering a perfect blend of nature and adventure.",
+                description: "Wayanad is a district known for its wildlife, waterfalls, and ancient caves.",
                 image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850416/wayanadu_gpawkt.png",
                 places: ["Edakkal Caves", "Chembra Peak", "Lakkidi View Point", "Soochippara Water Falls", "Meenmutty Falls", "Banasurasagar Dam"]
             },
             "Alleppey": {
-                description: "Alleppey, famous for its backwaters, is a serene destination for houseboat cruises and coastal relaxation.",
+                description: "Alleppey, famous for its backwaters, is a serene destination for houseboat cruises.",
                 image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850439/alleppey_eg4fs5.png",
                 places: ["Backwaters", "Alappuzha Beach", "Light House", "St. Mary Forane Church", "Vembanad Lake"]
             },
             "Vagamon": {
-                description: "Vagamon is a tranquil hill station with meadows, pine forests, and panoramic views of the Western Ghats.",
+                description: "Vagamon is a tranquil hill station with meadows, pine forests, and panoramic views.",
                 image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850545/vagamon_xoktr4.png",
                 places: ["Thangalpara", "Kurushimala", "Pine Forest", "Vagamon Meadows", "Ulupunni Tunnel", "Echo Point", "Idukki Dam", "Marmala Falls"]
             },
@@ -136,7 +142,7 @@ const destinations = {
                 places: ["Varkala Beach", "Varkala Cliff", "Odayam Beach", "Anjengo Fort Lighthouse"]
             },
             "Thekkady": {
-                description: "Thekkady is home to Periyar National Park, offering wildlife safaris and boat rides on the lake.",
+                description: "Thekkady is home to Periyar National Park, offering wildlife safaris and boat rides.",
                 image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850674/thekkady_j99sk0.png",
                 places: ["Periyar National Park", "Thekkady Lake", "Hill King", "Vandiperiyar"]
             }
@@ -221,507 +227,992 @@ const destinations = {
     }
 };
 
-// ✅ FIXED & OPTIMIZED openDestinationPage Function
-function openDestinationPage(state) {
-    const data = destinations[state];
-    if (!data) return;
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  📋 FORM DATA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    const detailPage = document.getElementById("detailPage");
-    const placesGrid = document.getElementById("places-grid");
-    
-    document.getElementById("detail-title").innerHTML = data.title;
-    document.getElementById("detail-subtitle").innerText = data.subtitle;
+let formData = { name: '', phone: '', persons: 1, days: 3, location: '' };
+let hasDataBeenSent = false;
 
-    placesGrid.innerHTML = "";
-    const isMobile = window.innerWidth <= 768;
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  📱 WHATSAPP SEND
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    for (const [city, cityData] of Object.entries(data.places)) {
-        const card = document.createElement("div");
-        card.className = "safari-card";
-        
-        // ✅ KEY FIX: Desktop-ku background image directly on safari-card
-        if (!isMobile) {
-            card.style.backgroundImage = `url('${cityData.image}')`;
-            card.style.backgroundSize = "cover";
-            card.style.backgroundPosition = "center";
-        }
+function sendToWhatsApp() {
+    const name = formData.name.trim();
+    const phone = formData.phone.trim();
+    if (!name || !phone) return false;
+    if (hasDataBeenSent) return false;
 
-        // ✅ Mobile-ku separate image div
-        if (isMobile) {
-            const imgDiv = document.createElement("div");
-            imgDiv.className = "card-img-top";
-            imgDiv.style.backgroundImage = `url('${cityData.image}')`;
-            imgDiv.style.width = "100%";
-            imgDiv.style.height = "55%";
-            imgDiv.style.backgroundSize = "cover";
-            imgDiv.style.backgroundPosition = "center";
-            imgDiv.style.backgroundRepeat = "no-repeat";
-            card.appendChild(imgDiv);
-        }
+    const msg = `🔔 NEW BOOKING ENQUIRY - Fundun Holidays
 
-        const destInfo = document.createElement('div');
-        destInfo.className = 'dest-info';
-        
-        destInfo.innerHTML = `
-            <h1>${city.toUpperCase()}</h1>
-            <p>${cityData.description}</p>
-            <div class="card-btns">
-                <button class="btn-gold" onclick="event.stopPropagation(); showBookingOptions('${state}', '${city}')">BOOK</button>
-                <button class="btn-white" onclick="event.stopPropagation(); viewCityDetails('${state}', '${city}')">VIEW</button>
-            </div>
-        `;
+👤 Name: ${formData.name}
+📱 Phone: ${formData.phone}
+📍 Location: ${formData.location}
+👥 Persons: ${formData.persons}
+📅 Days: ${formData.days}
 
-        card.appendChild(destInfo);
-        placesGrid.appendChild(card);
-    }
+⏰ Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`;
 
-    if (!isMobile) {
-        const navDiv = document.createElement("div");
-        navDiv.className = "slider-nav";
-        navDiv.innerHTML = `
-            <button onclick="moveSlider('prev')"><i class="fas fa-arrow-left"></i></button>
-            <button onclick="moveSlider('next')"><i class="fas fa-arrow-right"></i></button>
-        `;
-        placesGrid.appendChild(navDiv);
-    }
+    const whatsappURL = `https://wa.me/917558138968?text=${encodeURIComponent(msg)}`;
+    const w = window.open(whatsappURL, "_blank");
 
-    detailPage.style.display = "block";
-    setTimeout(() => detailPage.style.opacity = "1", 10);
-}
-
-// Slider Movement Logic (Intha logic constant-ah irukatum for desktop)
-function moveSlider(direction) {
-    const items = document.querySelectorAll('.safari-card');
-    const grid = document.getElementById('places-grid');
-    if (items.length === 0) return;
-
-    if (direction === 'next') {
-        grid.appendChild(items[0]);
+    if (w) {
+        hasDataBeenSent = true;
+        return true;
     } else {
-        grid.prepend(items[items.length - 1]);
+        alert('Please allow popups!');
+        return false;
     }
 }
 
-function closeDetailPage() {
-    document.getElementById("detailPage").style.display = "none";
-}
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🖼️ GALLERY DATA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function viewCityDetails(state, city) {
-    const places = destinations[state].places[city].places;
-    const modal = document.createElement("div");
-    
-    // Modal unique ID
-    modal.id = "city-details-modal";
-    
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.95); display: flex; justify-content: center;
-        align-items: center; z-index: 10000; backdrop-filter: blur(5px);
-    `;
+const galleryImages = [
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239861/POSTER_bvgobj.png", title: "Fundun Holidays", caption: "Explore Amazing Destinations" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769595950/hero_image_2_dxwrxu.png", title: "Beautiful Kerala", caption: "God's Own Country" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769620540/img_post_rbz4dd.png", title: "Tamil Nadu", caption: "Rich Culture & Heritage" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850347/Ooty_sm1awg.png", title: "Ooty", caption: "Queen of Hill Stations" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850359/munnar_bjo4pq.png", title: "Munnar", caption: "Tea Garden Paradise" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850389/kodaikanal_rrm80l.png", title: "Kodaikanal", caption: "Princess of Hill Stations" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850439/alleppey_eg4fs5.png", title: "Alleppey", caption: "Venice of the East" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769851229/mysore_aatmtu.png", title: "Mysore", caption: "City of Palaces" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769942817/coorg_hc1qce.jpg", title: "Coorg", caption: "Scotland of India" },
+    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769629047/ramoj_lhqfct.jpg", title: "Ramoji Film City", caption: "Asia's Largest Film Studio" }
+];
 
-    modal.innerHTML = `
-        <div style="background: linear-gradient(135deg, rgba(20,20,20,0.98), rgba(5,5,5,0.98)); 
-                    border: 1px solid rgba(212,175,55,0.4); padding: 35px; border-radius: 25px; 
-                    text-align: center; max-width: 500px; width: 90%; max-height: 85%; 
-                    overflow-y: auto; box-shadow: 0 30px 70px rgba(0,0,0,1);">
-            
-            <h3 style="color: #d4af37; margin-bottom: 25px; font-family: 'Poppins', sans-serif; letter-spacing: 1px;">
-                PLACES IN ${city.toUpperCase()}
-            </h3>
-            
-            <ul style="list-style: none; padding: 0; text-align: left; color: #fff;">
-                ${places.map(place => `
-                    <li style="margin-bottom: 12px; padding: 12px; border-bottom: 1px solid rgba(212,175,55,0.15); 
-                               background: rgba(255,255,255,0.03); border-radius: 12px; display: flex; align-items: center;">
-                        <i class="fas fa-map-marker-alt" style="color: #d4af37; margin-right: 12px; font-size: 14px;"></i> 
-                        <span style="font-size: 15px;">${place}</span>
-                    </li>
-                `).join("")}
-            </ul>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🎠 GALLERY STATE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-            <button id="close-modal-btn" style="background: linear-gradient(135deg, #d4af37, #b8962e); 
-                    color: #000; border: none; padding: 14px 40px; margin-top: 25px; 
-                    border-radius: 50px; cursor: pointer; font-weight: 700; transition: 0.3s; 
-                    text-transform: uppercase; letter-spacing: 1px;">
-                CLOSE
+let galleryCurrentSlide = 0;
+let galleryAutoSlideTimer = null;
+let galleryIsPaused = false;
+let lightboxCurrentIndex = 0;
+let touchStartX = 0;
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🏗️ BUILD GALLERY
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function buildGallery() {
+    const galleryContainer = document.getElementById('galleryContainer');
+    if (!galleryContainer) return;
+
+    galleryContainer.innerHTML = `
+        <div id="galleryWrapper" style="
+            position: relative; width: 100%; overflow: hidden;
+            border-radius: 20px; cursor: pointer; user-select: none;
+        ">
+            <!-- Slides -->
+            <div id="galleryTrack" style="display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);">
+                ${galleryImages.map((img, i) => `
+                    <div class="gallery-slide" data-index="${i}" style="min-width:100%; position:relative; overflow:hidden;">
+                        <img src="${img.src}" alt="${img.title}" style="
+                            width:100%; height:500px; object-fit:cover; display:block;
+                            transition:transform 0.4s ease; pointer-events:none;
+                        " onerror="this.src='https://via.placeholder.com/800x500/1a1a1a/d4af37?text=${encodeURIComponent(img.title)}'">
+
+                        <div class="slide-overlay" style="
+                            position:absolute; inset:0;
+                            background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 50%);
+                            opacity:0; transition:opacity 0.3s ease;
+                            display:flex; align-items:flex-end; padding:30px;
+                        ">
+                            <div>
+                                <h3 style="color:#d4af37; font-size:24px; margin:0; font-family:'Poppins',sans-serif; font-weight:700;">${img.title}</h3>
+                                <p style="color:#fff; font-size:14px; margin:5px 0 0; opacity:0.8;">${img.caption}</p>
+                                <span style="display:inline-block; margin-top:10px; padding:8px 20px;
+                                    background:rgba(212,175,55,0.3); border:1px solid #d4af37;
+                                    border-radius:25px; color:#d4af37; font-size:12px; font-weight:600;">
+                                    <i class="fas fa-expand"></i> CLICK TO VIEW
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <!-- Prev Arrow -->
+            <button onclick="galleryPrev(event)" style="
+                position:absolute; left:15px; top:50%; transform:translateY(-50%);
+                background:rgba(0,0,0,0.7); border:2px solid rgba(212,175,55,0.5);
+                color:#d4af37; width:50px; height:50px; border-radius:50%;
+                font-size:18px; cursor:pointer; z-index:10;
+                display:flex; align-items:center; justify-content:center;
+                transition:all 0.3s ease; backdrop-filter:blur(5px);
+            " onmouseover="this.style.background='rgba(212,175,55,0.3)'"
+               onmouseout="this.style.background='rgba(0,0,0,0.7)'">
+                <i class="fas fa-chevron-left"></i>
             </button>
+
+            <!-- Next Arrow -->
+            <button onclick="galleryNext(event)" style="
+                position:absolute; right:15px; top:50%; transform:translateY(-50%);
+                background:rgba(0,0,0,0.7); border:2px solid rgba(212,175,55,0.5);
+                color:#d4af37; width:50px; height:50px; border-radius:50%;
+                font-size:18px; cursor:pointer; z-index:10;
+                display:flex; align-items:center; justify-content:center;
+                transition:all 0.3s ease; backdrop-filter:blur(5px);
+            " onmouseover="this.style.background='rgba(212,175,55,0.3)'"
+               onmouseout="this.style.background='rgba(0,0,0,0.7)'">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+            <!-- Dots -->
+            <div id="galleryDots" style="
+                position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
+                display:flex; gap:8px; z-index:10;
+            ">
+                ${galleryImages.map((_, i) => `
+                    <button onclick="galleryGoTo(${i})" id="dot-${i}" style="
+                        width:${i===0?'24px':'8px'}; height:8px; border-radius:4px;
+                        background:${i===0?'#d4af37':'rgba(255,255,255,0.5)'};
+                        border:none; cursor:pointer; transition:all 0.3s ease; padding:0;
+                    "></button>
+                `).join('')}
+            </div>
+
+            <!-- Counter -->
+            <div id="galleryCounter" style="
+                position:absolute; top:15px; left:15px;
+                background:rgba(0,0,0,0.7); border:1px solid rgba(212,175,55,0.3);
+                color:#fff; padding:6px 14px; border-radius:20px;
+                font-size:12px; font-weight:600; z-index:10;
+            ">1 / ${galleryImages.length}</div>
+
+            <!-- Pause indicator -->
+            <div id="galleryPauseIndicator" style="
+                position:absolute; top:15px; right:15px;
+                background:rgba(0,0,0,0.7); border:1px solid rgba(212,175,55,0.5);
+                color:#d4af37; padding:6px 14px; border-radius:20px;
+                font-size:12px; font-weight:600; opacity:0;
+                transition:opacity 0.3s ease; pointer-events:none; z-index:10;
+            "><i class="fas fa-pause"></i> PAUSED</div>
         </div>
     `;
 
-    document.body.appendChild(modal);
+    setupGalleryEvents();
+    startGalleryAutoSlide();
+    console.log('✅ Gallery built:', galleryImages.length, 'images');
+}
 
-    // ✅ DIRECT EVENT LISTENER (No more window.closeModal needed)
-    const closeBtn = modal.querySelector("#close-modal-btn");
-    closeBtn.addEventListener('click', () => {
-        modal.remove(); // Direct-ah antha modal node-aye remove pannidum
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  ⚙️ GALLERY EVENTS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function setupGalleryEvents() {
+    const wrapper = document.getElementById('galleryWrapper');
+    if (!wrapper) return;
+
+    // Hover → PAUSE
+    wrapper.addEventListener('mouseenter', () => {
+        galleryIsPaused = true;
+        clearInterval(galleryAutoSlideTimer);
+        const ind = document.getElementById('galleryPauseIndicator');
+        if (ind) ind.style.opacity = '1';
+        // Show overlay on current slide
+        const slides = wrapper.querySelectorAll('.gallery-slide');
+        if (slides[galleryCurrentSlide]) {
+            const ov = slides[galleryCurrentSlide].querySelector('.slide-overlay');
+            if (ov) ov.style.opacity = '1';
+        }
     });
 
-    // Background click panna close aaga
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.remove();
+    wrapper.addEventListener('mouseleave', () => {
+        galleryIsPaused = false;
+        startGalleryAutoSlide();
+        const ind = document.getElementById('galleryPauseIndicator');
+        if (ind) ind.style.opacity = '0';
+        wrapper.querySelectorAll('.slide-overlay').forEach(ov => ov.style.opacity = '0');
+    });
+
+    // Each slide: click → lightbox, hover → overlay
+    wrapper.querySelectorAll('.gallery-slide').forEach((slide, index) => {
+        slide.addEventListener('click', (e) => {
+            if (e.target.closest('button')) return;
+            openGalleryLightbox(index);
+        });
+
+        slide.addEventListener('mouseenter', () => {
+            const ov = slide.querySelector('.slide-overlay');
+            if (ov) ov.style.opacity = '1';
+        });
+
+        slide.addEventListener('mouseleave', () => {
+            const ov = slide.querySelector('.slide-overlay');
+            if (ov) ov.style.opacity = '0';
+        });
+    });
+
+    // Touch swipe
+    wrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        galleryIsPaused = true;
+        clearInterval(galleryAutoSlideTimer);
+    }, { passive: true });
+
+    wrapper.addEventListener('touchend', (e) => {
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+            diff > 0 ? galleryNextSlide() : galleryPrevSlide();
+        }
+        galleryIsPaused = false;
+        startGalleryAutoSlide();
+    }, { passive: true });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  ▶️ GALLERY CONTROLS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function startGalleryAutoSlide() {
+    clearInterval(galleryAutoSlideTimer);
+    galleryAutoSlideTimer = setInterval(() => {
+        if (!galleryIsPaused) galleryNextSlide();
+    }, 4000);
+}
+
+function galleryGoTo(index) {
+    galleryCurrentSlide = index;
+    const track = document.getElementById('galleryTrack');
+    if (track) track.style.transform = `translateX(-${index * 100}%)`;
+    // Update dots
+    galleryImages.forEach((_, i) => {
+        const dot = document.getElementById(`dot-${i}`);
+        if (dot) {
+            dot.style.width = i === index ? '24px' : '8px';
+            dot.style.background = i === index ? '#d4af37' : 'rgba(255,255,255,0.5)';
+        }
+    });
+    // Update counter
+    const counter = document.getElementById('galleryCounter');
+    if (counter) counter.textContent = `${index + 1} / ${galleryImages.length}`;
+}
+
+function galleryNextSlide() {
+    galleryCurrentSlide = (galleryCurrentSlide + 1) % galleryImages.length;
+    galleryGoTo(galleryCurrentSlide);
+}
+
+function galleryPrevSlide() {
+    galleryCurrentSlide = (galleryCurrentSlide - 1 + galleryImages.length) % galleryImages.length;
+    galleryGoTo(galleryCurrentSlide);
+}
+
+function galleryNext(e) { if (e) e.stopPropagation(); galleryNextSlide(); }
+function galleryPrev(e) { if (e) e.stopPropagation(); galleryPrevSlide(); }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🔲 LIGHTBOX OPEN
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function openGalleryLightbox(index) {
+    lightboxCurrentIndex = index;
+    const existing = document.getElementById('galleryLightbox');
+    if (existing) existing.remove();
+
+    clearInterval(galleryAutoSlideTimer);
+
+    const lightbox = document.createElement('div');
+    lightbox.id = 'galleryLightbox';
+    lightbox.style.cssText = `
+        position:fixed; top:0; left:0; width:100%; height:100%;
+        background:rgba(0,0,0,0.97); z-index:99999;
+        display:flex; align-items:center; justify-content:center;
+        opacity:0; transition:opacity 0.3s ease; backdrop-filter:blur(15px);
+    `;
+
+    lightbox.innerHTML = `
+        <!-- Close Button - TOP RIGHT -->
+        <button id="lightboxClose" style="
+            position:fixed; top:20px; right:20px;
+            background:rgba(212,175,55,0.2); border:2px solid #d4af37;
+            color:#d4af37; width:55px; height:55px; border-radius:50%;
+            font-size:22px; cursor:pointer; z-index:100001;
+            display:flex; align-items:center; justify-content:center;
+            transition:all 0.3s ease; backdrop-filter:blur(5px);
+        " onmouseover="this.style.background='rgba(212,175,55,0.5)'; this.style.transform='scale(1.1)';"
+           onmouseout="this.style.background='rgba(212,175,55,0.2)'; this.style.transform='scale(1)';">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Counter - TOP CENTER -->
+        <div id="lightboxCounter" style="
+            position:fixed; top:25px; left:50%; transform:translateX(-50%);
+            color:#fff; font-size:14px; font-weight:600;
+            background:rgba(0,0,0,0.7); padding:8px 20px; border-radius:25px;
+            border:1px solid rgba(212,175,55,0.4); z-index:100001;
+            font-family:'Poppins',sans-serif;
+        ">${index + 1} / ${galleryImages.length}</div>
+
+        <!-- Main Image -->
+        <div style="position:relative; max-width:90vw; max-height:85vh; display:flex; align-items:center; justify-content:center;">
+            <img id="lightboxImage" src="${galleryImages[index].src}" alt="${galleryImages[index].title}" style="
+                max-width:90vw; max-height:80vh; object-fit:contain;
+                border-radius:12px; box-shadow:0 30px 80px rgba(0,0,0,1);
+                transition:opacity 0.3s ease; user-select:none;
+            " onerror="this.src='https://via.placeholder.com/800x500/1a1a1a/d4af37?text=Image'">
+        </div>
+
+        <!-- Caption - ABOVE THUMBS -->
+        <div id="lightboxCaption" style="
+            position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+            text-align:center; z-index:100001; white-space:nowrap;
+        ">
+            <h3 style="color:#d4af37; font-size:20px; margin:0; font-family:'Poppins',sans-serif; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,1);">
+                ${galleryImages[index].title}
+            </h3>
+            <p style="color:rgba(255,255,255,0.8); font-size:13px; margin:4px 0 0; text-shadow:0 2px 10px rgba(0,0,0,1);">
+                ${galleryImages[index].caption}
+            </p>
+        </div>
+
+        <!-- Prev Button - LEFT MIDDLE -->
+        <button id="lightboxPrev" style="
+            position:fixed; left:15px; top:50%; transform:translateY(-50%);
+            background:rgba(0,0,0,0.8); border:2px solid rgba(212,175,55,0.6);
+            color:#d4af37; width:55px; height:55px; border-radius:50%;
+            font-size:20px; cursor:pointer; z-index:100001;
+            display:flex; align-items:center; justify-content:center;
+            transition:all 0.3s ease;
+        " onmouseover="this.style.background='rgba(212,175,55,0.3)';"
+           onmouseout="this.style.background='rgba(0,0,0,0.8)';">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <!-- Next Button - RIGHT MIDDLE -->
+        <button id="lightboxNext" style="
+            position:fixed; right:15px; top:50%; transform:translateY(-50%);
+            background:rgba(0,0,0,0.8); border:2px solid rgba(212,175,55,0.6);
+            color:#d4af37; width:55px; height:55px; border-radius:50%;
+            font-size:20px; cursor:pointer; z-index:100001;
+            display:flex; align-items:center; justify-content:center;
+            transition:all 0.3s ease;
+        " onmouseover="this.style.background='rgba(212,175,55,0.3)';"
+           onmouseout="this.style.background='rgba(0,0,0,0.8)';">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <!-- Thumbnail Strip - BOTTOM -->
+        <div id="lightboxThumbs" style="
+            position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
+            display:flex; gap:8px; z-index:100001; padding:8px 12px;
+            background:rgba(0,0,0,0.8); border-radius:15px;
+            border:1px solid rgba(212,175,55,0.2);
+            max-width:90vw; overflow-x:auto;
+        ">
+            ${galleryImages.map((img, i) => `
+                <img src="${img.src}" alt="${img.title}" data-index="${i}"
+                    onclick="lightboxGoTo(${i})"
+                    style="
+                        width:50px; height:38px; object-fit:cover; border-radius:6px;
+                        cursor:pointer; flex-shrink:0; transition:all 0.3s ease;
+                        border:2px solid ${i === index ? '#d4af37' : 'transparent'};
+                        opacity:${i === index ? '1' : '0.5'};
+                    "
+                    onmouseover="this.style.opacity='0.9'; this.style.borderColor='rgba(212,175,55,0.7)';"
+                    onmouseout="if(lightboxCurrentIndex!==${i}){this.style.opacity='0.5'; this.style.borderColor='transparent';}"
+                    onerror="this.style.display='none'">
+            `).join('')}
+        </div>
+    `;
+
+    document.body.appendChild(lightbox);
+    setTimeout(() => { lightbox.style.opacity = '1'; }, 10);
+
+    // Events
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev').addEventListener('click', (e) => { e.stopPropagation(); lightboxGoTo(lightboxCurrentIndex - 1); });
+    document.getElementById('lightboxNext').addEventListener('click', (e) => { e.stopPropagation(); lightboxGoTo(lightboxCurrentIndex + 1); });
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', handleLightboxKeyboard);
+
+    // Touch swipe inside lightbox
+    let lbTouchStart = 0;
+    lightbox.addEventListener('touchstart', (e) => { lbTouchStart = e.changedTouches[0].screenX; }, { passive: true });
+    lightbox.addEventListener('touchend', (e) => {
+        const diff = lbTouchStart - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) diff > 0 ? lightboxGoTo(lightboxCurrentIndex + 1) : lightboxGoTo(lightboxCurrentIndex - 1);
+    }, { passive: true });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🔄 LIGHTBOX NAVIGATE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function lightboxGoTo(index) {
+    if (index < 0) index = galleryImages.length - 1;
+    if (index >= galleryImages.length) index = 0;
+    lightboxCurrentIndex = index;
+    const img = galleryImages[index];
+
+    // Fade image
+    const lbImg = document.getElementById('lightboxImage');
+    if (lbImg) {
+        lbImg.style.opacity = '0';
+        setTimeout(() => { lbImg.src = img.src; lbImg.style.opacity = '1'; }, 200);
+    }
+
+    // Update caption
+    const caption = document.getElementById('lightboxCaption');
+    if (caption) {
+        caption.innerHTML = `
+            <h3 style="color:#d4af37; font-size:20px; margin:0; font-family:'Poppins',sans-serif; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,1);">${img.title}</h3>
+            <p style="color:rgba(255,255,255,0.8); font-size:13px; margin:4px 0 0; text-shadow:0 2px 10px rgba(0,0,0,1);">${img.caption}</p>
+        `;
+    }
+
+    // Update counter
+    const counter = document.getElementById('lightboxCounter');
+    if (counter) counter.textContent = `${index + 1} / ${galleryImages.length}`;
+
+    // Update thumbnails
+    document.querySelectorAll('#lightboxThumbs img').forEach((thumb, i) => {
+        if (i === index) {
+            thumb.style.border = '2px solid #d4af37';
+            thumb.style.opacity = '1';
+            thumb.scrollIntoView({ block: 'nearest', inline: 'center' });
+        } else {
+            thumb.style.border = '2px solid transparent';
+            thumb.style.opacity = '0.5';
+        }
     });
 }
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  ⌨️ KEYBOARD + CLOSE
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function handleLightboxKeyboard(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') lightboxGoTo(lightboxCurrentIndex + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') lightboxGoTo(lightboxCurrentIndex - 1);
+    if (e.key === 'Escape') closeLightbox();
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('galleryLightbox');
+    if (lightbox) {
+        lightbox.style.opacity = '0';
+        setTimeout(() => lightbox.remove(), 300);
+    }
+    document.removeEventListener('keydown', handleLightboxKeyboard);
+    if (!galleryIsPaused) startGalleryAutoSlide();
+}
+
+// ──────────────────────────────────────────────────────────
+//  🔎 Standalone lightbox for static images (gallery-viewport)
+//  Allows clicking fallback/static images to open a large view
+// ──────────────────────────────────────────────────────────
+function openStandaloneLightbox(src, title = '', caption = '') {
+    const existing = document.getElementById('standaloneLightbox');
+    if (existing) existing.remove();
+
+    const lb = document.createElement('div');
+    lb.id = 'standaloneLightbox';
+    lb.style.cssText = `
+        position:fixed; inset:0; background:rgba(0,0,0,0.95);
+        display:flex; align-items:center; justify-content:center;
+        z-index:100000; padding:24px;
+    `;
+
+    lb.innerHTML = `
+        <button id="standaloneClose" style="
+            position:fixed; top:20px; right:20px; background:rgba(212,175,55,0.2);
+            border:2px solid #d4af37; color:#d4af37; width:55px; height:55px; border-radius:50%;
+            font-size:22px; cursor:pointer; z-index:100001; display:flex; align-items:center; justify-content:center;
+        "><i class="fas fa-times"></i></button>
+
+        <div style="max-width:95vw; max-height:90vh; display:flex; align-items:center; justify-content:center;">
+            <img src="${src}" alt="${title}" style="max-width:95vw; max-height:88vh; object-fit:contain; border-radius:12px; box-shadow:0 30px 80px rgba(0,0,0,1);"/>
+        </div>
+
+        ${title ? `<div style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); color:#fff; z-index:100001; font-weight:600;">${title}${caption ? ` — <span style="opacity:0.85">${caption}</span>` : ''}</div>` : ''}
+    `;
+
+    document.body.appendChild(lb);
+
+    // events
+    document.getElementById('standaloneClose').addEventListener('click', closeStandaloneLightbox);
+    lb.addEventListener('click', (e) => { if (e.target === lb) closeStandaloneLightbox(); });
+
+    function onKey(e) {
+        if (e.key === 'Escape') {
+            closeStandaloneLightbox();
+            document.removeEventListener('keydown', onKey);
+        }
+    }
+    document.addEventListener('keydown', onKey);
+}
+
+function closeStandaloneLightbox() {
+    const lb = document.getElementById('standaloneLightbox');
+    if (lb) lb.remove();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🗺️ DESTINATION PAGES
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function openDestinationPage(state) {
+    const data = destinations[state];
+    if (!data) return;
+    const detailPage = document.getElementById("detailPage");
+    const placesGrid = document.getElementById("places-grid");
+    if (!detailPage || !placesGrid) return;
+
+    document.getElementById("detail-title").innerHTML = data.title;
+    document.getElementById("detail-subtitle").innerText = data.subtitle;
+    placesGrid.innerHTML = "";
+    placesGrid.style.cssText = `display:grid; grid-template-columns:repeat(auto-fill,minmax(350px,1fr)); gap:30px; padding:40px 20px; max-width:1400px; margin:0 auto;`;
+
+    Object.entries(data.places).forEach(([city, cityData]) => {
+        const card = document.createElement("div");
+        card.style.cssText = `background:linear-gradient(135deg,rgba(20,20,20,0.95),rgba(10,10,10,0.95)); border:1px solid rgba(212,175,55,0.3); border-radius:25px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:all 0.3s ease;`;
+
+        const img = document.createElement('div');
+        img.style.cssText = `background-image:url('${cityData.image}'); background-size:cover; background-position:center; height:250px; position:relative;`;
+        const imgOverlay = document.createElement('div');
+        imgOverlay.style.cssText = `position:absolute; inset:0; background:linear-gradient(to bottom,transparent,rgba(0,0,0,0.7));`;
+        img.appendChild(imgOverlay);
+
+        const content = document.createElement('div');
+        content.style.padding = '30px';
+        content.innerHTML = `
+            <h3 style="font-family:'Poppins',sans-serif; font-size:24px; font-weight:700; color:#d4af37; margin-bottom:15px;">${city}</h3>
+            <p style="font-size:14px; line-height:1.7; color:#ccc; margin-bottom:20px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${cityData.description}</p>
+            <div style="display:flex; gap:10px;">
+                <button onclick="showBookingOptions('${state}','${city}')" style="flex:1; background:linear-gradient(135deg,#d4af37,#b8962e); color:#000; border:none; padding:12px 20px; border-radius:25px; font-size:13px; font-weight:700; cursor:pointer; text-transform:uppercase;">
+                    <i class="fas fa-calendar-check"></i> BOOK NOW
+                </button>
+                <button onclick="viewCityDetails('${state}','${city}')" style="flex:1; background:transparent; border:2px solid #d4af37; color:#d4af37; padding:12px 20px; border-radius:25px; font-size:13px; font-weight:700; cursor:pointer; text-transform:uppercase;">
+                    <i class="fas fa-map-marked-alt"></i> VIEW
+                </button>
+            </div>
+            <p style="font-size:12px; color:#666; margin-top:15px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1);">
+                <i class="fas fa-map-marker-alt" style="color:#d4af37; margin-right:6px;"></i>
+                ${cityData.places.length} Places to Visit
+            </p>
+        `;
+
+        card.addEventListener('mouseenter', () => { card.style.transform = 'translateY(-10px)'; card.style.boxShadow = '0 20px 50px rgba(0,0,0,0.8)'; });
+        card.addEventListener('mouseleave', () => { card.style.transform = 'translateY(0)'; card.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)'; });
+
+        card.appendChild(img);
+        card.appendChild(content);
+        placesGrid.appendChild(card);
+    });
+
+    detailPage.style.display = "block";
+    detailPage.classList.add("active");
+    document.body.classList.add("overlay-open");
+    setTimeout(() => { detailPage.style.opacity = "1"; }, 10);
+}
+
+function closeDetailPage() {
+    const detailPage = document.getElementById("detailPage");
+    if (!detailPage) return;
+    const loc = document.getElementById("detail-title");
+    let currentLocation = loc ? loc.textContent.replace(" Destinations", "").trim() : "General Enquiry";
+
+    detailPage.style.opacity = "0";
+    detailPage.classList.remove("active");
+    document.body.classList.remove("overlay-open");
+    setTimeout(() => {
+        detailPage.style.display = "none";
+        showBookingOptions(currentLocation);
+    }, 300);
+}
+
+function viewCityDetails(state, city) {
+    const places = destinations[state]?.places[city]?.places;
+    if (!places) return;
+    const modal = document.createElement("div");
+    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:flex; justify-content:center; align-items:center; z-index:10001;`;
+    modal.innerHTML = `
+        <div style="background:rgba(20,20,20,0.98); border:2px solid rgba(212,175,55,0.4); padding:40px; border-radius:25px; max-width:550px; width:90%; max-height:85%; overflow-y:auto;">
+            <h3 style="color:#d4af37; text-align:center; font-size:28px; margin-bottom:20px; font-family:'Poppins',sans-serif;">${city.toUpperCase()}</h3>
+            <ul style="list-style:none; padding:0; color:#fff;">
+                ${places.map((p, i) => `
+                    <li style="margin:10px 0; padding:14px; background:rgba(212,175,55,0.05); border-radius:12px; display:flex; align-items:center;">
+                        <span style="display:inline-flex; width:28px; height:28px; background:#d4af37; border-radius:50%; color:#000; font-weight:700; align-items:center; justify-content:center; margin-right:14px; font-size:12px;">${i+1}</span>
+                        ${p}
+                    </li>
+                `).join('')}
+            </ul>
+            <button onclick="this.closest('div').parentElement.remove()" style="background:#d4af37; color:#000; border:none; padding:14px 50px; margin-top:20px; border-radius:50px; cursor:pointer; font-weight:700; display:block; margin-left:auto; margin-right:auto; font-family:'Poppins',sans-serif; font-size:15px;">
+                <i class="fas fa-times"></i> CLOSE
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  📝 BOOKING FORM
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 function showBookingOptions(state, city = '') {
     const location = city ? `${city}, ${state}` : state;
-    
-    // Create calculator modal
+    formData.location = location;
+    hasDataBeenSent = false;
+
     const modal = document.createElement("div");
-    modal.style.position = "fixed";
-    modal.style.top = "0";
-    modal.style.left = "0";
-    modal.style.width = "100%";
-    modal.style.height = "100%";
-    modal.style.backgroundColor = "rgba(0,0,0,0.9)";
-    modal.style.display = "flex";
-    modal.style.justifyContent = "center";
-    modal.style.alignItems = "center";
-    modal.style.zIndex = "10000";
-    modal.style.overflowY = "auto";
+    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); display:flex; justify-content:center; align-items:center; z-index:10002; overflow-y:auto; backdrop-filter:blur(10px);`;
     modal.id = "bookingModal";
 
     modal.innerHTML = `
-        <div style="background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(5,5,5,0.95)); border: 1px solid rgba(212,175,55,0.3); padding: 40px; border-radius: 25px; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); color: #fff; margin: 20px;">
-            <h2 style="color: #d4af37; margin-bottom: 20px; text-align: center; font-size: 24px;">PACKAGE CALCULATOR</h2>
-            <p style="text-align: center; color: #aaa; margin-bottom: 25px;">📍 ${location}</p>
-            
-            <form id="bookingCalcForm" style="display: flex; flex-direction: column; gap: 15px;">
+        <div id="bookingModalContent" style="background:linear-gradient(135deg,rgba(20,20,20,0.95),rgba(5,5,5,0.95)); border:2px solid rgba(212,175,55,0.3); padding:45px; border-radius:25px; max-width:520px; color:#fff; margin:20px; width:90%;">
+            <div style="text-align:center; margin-bottom:25px;">
+                <i class="fas fa-calculator" style="font-size:48px; color:#d4af37;"></i>
+                <h2 style="color:#d4af37; margin:10px 0; font-size:28px; font-family:'Poppins',sans-serif; font-weight:800;">PACKAGE CALCULATOR</h2>
+                <p style="color:#aaa; margin:5px 0; font-size:15px;"><i class="fas fa-map-marker-alt" style="color:#d4af37;"></i> ${location}</p>
+            </div>
+            <form id="bookingCalcForm" style="display:flex; flex-direction:column; gap:18px;">
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #d4af37;">Full Name *</label>
-                    <input type="text" id="booking-name" placeholder="Your Name" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0c0c0c; color: #fff; outline: none; font-family: inherit; box-sizing: border-box;">
+                    <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fas fa-user"></i> Full Name *</label>
+                    <input type="text" id="booking-name" placeholder="Enter your name" required style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; font-family:inherit; box-sizing:border-box; font-size:15px;"
+                        onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
                 </div>
-                
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #d4af37;">WhatsApp Number *</label>
-                    <input type="tel" id="booking-phone" placeholder="+91 XXXXXXXXXX" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0c0c0c; color: #fff; outline: none; font-family: inherit; box-sizing: border-box;">
+                    <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fab fa-whatsapp"></i> WhatsApp Number *</label>
+                    <input type="tel" id="booking-phone" placeholder="+91 XXXXXXXXXX" required style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; font-family:inherit; box-sizing:border-box; font-size:15px;"
+                        onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
                 </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
                     <div>
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #d4af37;">Number of Persons *</label>
-                        <input type="number" id="booking-persons" min="1" value="1" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0c0c0c; color: #fff; outline: none; font-family: inherit; box-sizing: border-box;">
+                        <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fas fa-users"></i> Persons *</label>
+                        <input type="number" id="booking-persons" min="1" value="1" style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; box-sizing:border-box; font-size:15px;" onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #d4af37;">Number of Days *</label>
-                        <input type="number" id="booking-days" min="1" value="3" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #0c0c0c; color: #fff; outline: none; font-family: inherit; box-sizing: border-box;">
+                        <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fas fa-calendar-alt"></i> Days *</label>
+                        <input type="number" id="booking-days" min="1" value="3" style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; box-sizing:border-box; font-size:15px;" onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
                     </div>
                 </div>
-                
-                <!-- Price calculation removed as requested -->
-                
-                <button type="submit" style="background: linear-gradient(135deg, #d4af37, #b8962e); color: #000; border: none; padding: 14px; border-radius: 25px; font-weight: 600; cursor: pointer; font-size: 16px; transition: 0.3s; font-family: inherit;">
-                    SEND ENQUIRY VIA WHATSAPP
+                <button type="submit" id="submitBookingBtn" style="background:linear-gradient(135deg,#d4af37,#b8962e); color:#000; border:none; padding:16px; border-radius:30px; font-weight:700; cursor:pointer; font-size:15px; font-family:'Poppins',sans-serif; text-transform:uppercase; letter-spacing:1px; box-shadow:0 10px 30px rgba(212,175,55,0.4);">
+                    <i class="fab fa-whatsapp"></i>START JOURNEY
                 </button>
-                
-                <button type="button" onclick="closeBookingModal()" style="background: transparent; border: 1px solid #666; color: #aaa; padding: 10px; border-radius: 25px; cursor: pointer; transition: 0.3s; font-family: inherit;">
-                    Cancel
+                <button type="button" id="cancelBookingBtn" style="background:transparent; border:1px solid #666; color:#aaa; padding:12px; border-radius:30px; cursor:pointer; font-family:inherit; font-size:14px;">
+                    <i class="fas fa-times"></i> Cancel
                 </button>
             </form>
         </div>
     `;
 
     document.body.appendChild(modal);
-    
-    // Form submission (no automatic price calculation)
+
+    document.getElementById("booking-name").addEventListener('input', (e) => { formData.name = e.target.value; });
+    document.getElementById("booking-phone").addEventListener('input', (e) => { formData.phone = e.target.value; });
+    document.getElementById("booking-persons").addEventListener('input', (e) => { formData.persons = e.target.value; });
+    document.getElementById("booking-days").addEventListener('input', (e) => { formData.days = e.target.value; });
+
     document.getElementById("bookingCalcForm").addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        const name = document.getElementById("booking-name").value;
-        const phone = document.getElementById("booking-phone").value;
-        const persons = document.getElementById("booking-persons").value;
-        const days = document.getElementById("booking-days").value;
-        
-        const msg = `Hi Fundun Holidays, I'm ${name}. I want to book a package for ${location} for ${persons} persons for ${days} days. My WhatsApp: ${phone}`;
-        sendToWhatsApp(msg);
+        if (!formData.name.trim() || !formData.phone.trim()) { showQuickNotification("❌ Please fill Name and Phone!"); return; }
+        const btn = document.getElementById("submitBookingBtn");
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CONTACTING TEAM...';
+        btn.style.opacity = '0.7';
+
+        // big confirmation popup (user requested)
+        showMegaPopup('My team will contact you soon', 1500);
+
+        // wait briefly so user sees the mega popup, then open WhatsApp
+        setTimeout(() => {
+            const opened = sendToWhatsApp();
+            if (opened) {
+                showSuccessNotification("✅ WhatsApp opened!");
+                setTimeout(() => closeBookingModal(), 2000);
+                // restore button label afterwards
+                setTimeout(() => { btn.disabled = false; btn.innerHTML = '<i class="fab fa-whatsapp"></i> VIEW DETAILS'; btn.style.opacity = '1'; }, 1600);
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fab fa-whatsapp"></i> VIEW DETAILS';
+                btn.style.opacity = '1';
+            }
+        }, 700);
     });
-    
-    window.closeBookingModal = () => {
-        const bookingModal = document.getElementById("bookingModal");
-        if(bookingModal && bookingModal.parentNode) {
-            document.body.removeChild(bookingModal);
+
+    document.getElementById("cancelBookingBtn").addEventListener('click', function() {
+        if (formData.name.trim() || formData.phone.trim()) {
+            const btn = document.getElementById("cancelBookingBtn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            if (sendToWhatsApp()) {
+                showSuccessNotification("✅ Message sent!");
+                setTimeout(() => closeBookingModal(), 1500);
+            } else { closeBookingModal(); }
+        } else { closeBookingModal(); }
+    });
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            if (formData.name.trim() || formData.phone.trim()) {
+                if (sendToWhatsApp()) {
+                    showSuccessNotification("✅ Message sent!");
+                    setTimeout(() => closeBookingModal(), 1500);
+                } else { closeBookingModal(); }
+            } else { closeBookingModal(); }
         }
+    });
+
+    document.getElementById("bookingModalContent").addEventListener('click', (e) => e.stopPropagation());
+
+    window.closeBookingModal = () => {
+        const bm = document.getElementById("bookingModal");
+        if (bm) { bm.style.opacity = '0'; setTimeout(() => bm.remove(), 300); }
     };
 }
 
-function bookViaWhatsApp(state) {
-    const msg = `Hi Fundun Holidays, I want to book a package for ${state}.`;
-    const phone = "919585575354";
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  ✅ NOTIFICATIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function showSuccessNotification(message) {
+    const n = document.createElement('div');
+    n.style.cssText = `position:fixed; top:100px; right:30px; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; padding:18px 28px; border-radius:15px; border:2px solid rgba(37,211,102,0.5); z-index:10003; opacity:0; transform:translateX(50px); transition:all 0.4s ease; box-shadow:0 10px 40px rgba(37,211,102,0.4); font-weight:600; font-size:15px; display:flex; align-items:center; gap:12px;`;
+    n.innerHTML = `<i class="fas fa-check-circle" style="font-size:22px;"></i><span>${message}</span>`;
+    document.body.appendChild(n);
+    setTimeout(() => { n.style.opacity='1'; n.style.transform='translateX(0)'; }, 10);
+    setTimeout(() => { n.style.opacity='0'; setTimeout(() => n.remove(), 400); }, 3000);
 }
 
-function bookViaInstagram(state) {
-    const msg = `Hi Fundun Holidays, I want to book a package for ${state}.`;
-    const url = `https://www.instagram.com/fundun_holidays`;
-    window.open(url, "_blank");
+// Big centered popup used when user submits booking ("my team will contact you soon")
+function showMegaPopup(message, duration = 1500) {
+    const existing = document.getElementById('megaPopup');
+    if (existing) existing.remove();
+    const p = document.createElement('div');
+    p.id = 'megaPopup';
+    p.style.cssText = `position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:100050; pointer-events:none;`;
+    p.innerHTML = `
+        <div style="pointer-events:auto; background:linear-gradient(180deg,#0b0b0b,#111); border:2px solid rgba(212,175,55,0.25); color:#fff; padding:28px 36px; border-radius:18px; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,0.9); max-width:90%;">
+            <div style="font-size:34px; color:#d4af37; margin-bottom:8px;"><i class='fas fa-headset'></i></div>
+            <div style="font-size:20px; font-weight:700; line-height:1.2;">${message}</div>
+        </div>
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => { p.remove(); }, duration);
+} 
+
+function showQuickNotification(message) {
+    const n = document.createElement('div');
+    n.style.cssText = `position:fixed; top:100px; right:30px; background:rgba(0,0,0,0.9); color:#fff; padding:15px 25px; border-radius:10px; border:1px solid #d4af37; z-index:10000; opacity:0; transform:translateX(50px); transition:all 0.3s ease;`;
+    n.textContent = message;
+    document.body.appendChild(n);
+    setTimeout(() => { n.style.opacity='1'; n.style.transform='translateX(0)'; }, 10);
+    setTimeout(() => { n.style.opacity='0'; setTimeout(() => n.remove(), 300); }, 2000);
 }
 
-function sendToWhatsApp(message) {
-    const phone = "919585575354";
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, "_blank");
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  📞 OTHER FUNCTIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function quickQuote(p) { showBookingOptions(p); }
+function whatsapp(m) { window.open(`https://wa.me/917558138968?text=${encodeURIComponent("Hi Fundun Holidays, " + m)}`, "_blank"); }
+function openMail() { window.open("https://mail.google.com/mail/?view=cm&fs=1&to=fundunholidays@gmail.com", "_blank"); }
+function scrollToSection(id) { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); }
+function openQuickCalculator() { showBookingOptions('General Enquiry'); }
+function openServiceBooking(s) { showBookingOptions(s); }
+
+// Phone options popup (Call vs WhatsApp)
+function showPhoneOptions() {
+    const existing = document.getElementById('phoneOptionsModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'phoneOptionsModal';
+    modal.style.cssText = `position:fixed; inset:0; background:rgba(0,0,0,0.92); display:flex; align-items:center; justify-content:center; z-index:10050; backdrop-filter:blur(10px);`;
+    modal.innerHTML = `
+        <div style="background:linear-gradient(135deg,rgba(20,20,20,0.95),rgba(5,5,5,0.95)); border:2px solid rgba(212,175,55,0.3); padding:40px; border-radius:25px; max-width:450px; width:90%; text-align:center; color:#fff;">
+            <i class="fas fa-phone" style="font-size:48px; color:#d4af37; margin-bottom:15px; display:block;"></i>
+            <h3 style="color:#d4af37; margin:10px 0 25px; font-size:22px; font-family:'Poppins',sans-serif;">CONTACT US</h3>
+            <p style="color:#aaa; margin-bottom:30px;">+91 7010954360</p>
+            
+            <div style="display:flex; gap:14px; justify-content:center;">
+                <button onclick="callPhone('7010954360')" style="flex:1; background:linear-gradient(135deg,#d4af37,#b8962e); color:#000; border:none; padding:14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:14px; text-transform:uppercase;">
+                    <i class="fas fa-phone"></i> CALL
+                </button>
+                <button onclick="whatsappPhone('7010954360')" style="flex:1; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; border:none; padding:14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:14px; text-transform:uppercase;">
+                    <i class="fab fa-whatsapp"></i> WHATSAPP
+                </button>
+            </div>
+            <button onclick="document.getElementById('phoneOptionsModal').remove()" style="width:100%; margin-top:14px; background:transparent; border:1px solid #666; color:#aaa; padding:10px; border-radius:20px; cursor:pointer; font-family:inherit; font-size:13px;">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
 }
 
-function whatsapp(message){
-    const phone = "919585575354";
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent("Hi Fundun Holidays, " + message)}`;
-    window.open(url, "_blank");
+function callPhone(phone) {
+    window.location.href = `tel:+91${phone}`;
+    document.getElementById('phoneOptionsModal')?.remove();
 }
 
-function toggleAbout(show){
-    document.getElementById("aboutPage").style.display = show ? "block" : "none";
+function whatsappPhone(phone) {
+    window.open(`https://wa.me/91${phone}`, '_blank');
+    document.getElementById('phoneOptionsModal')?.remove();
 }
 
-function scrollToSection(id){
-    document.getElementById(id).scrollIntoView({behavior:"smooth"});
-}
-
-function openMail(){
-    window.location.href = "mailto:dineshcse142@gmail.com";
-}
-
-// Form submit handler
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("heroCalcForm");
-    if (form) {
-        form.addEventListener("submit", function(e){
-            e.preventDefault();
-            const name = document.getElementById("cName").value;
-            const phone = document.getElementById("cPhone").value;
-            const loc = document.getElementById("cLoc").value;
-            const seats = document.getElementById("cSeats").value;
-            const days = document.getElementById("cDays").value;
-            const msg = `Hi Fundun Holidays, I'm ${name}. I want a package for ${loc} for ${seats} persons for ${days} days. My number is ${phone}.`;
-            whatsapp(msg);
-        });
-    }
-
-    // Make images lazy and hint the browser for GPU-accelerated transforms
-    document.querySelectorAll('img').forEach(img => {
-        if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
-        try {
-            img.style.willChange = 'transform, opacity';
-            img.style.backfaceVisibility = 'hidden';
-            img.style.transform = 'translateZ(0)';
-        } catch (e) {}
-    });
-});
-/**************** HERO LEFT BOTTOM ROTATING REVIEWS ****************/
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  ⭐ REVIEWS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const heroReviews = [
-  { name: "Arun", stars: 5, text: "Amazing trip planning and great support throughout our journey!" },
-  { name: "Priya", stars: 5, text: "Best travel experience ever. Hotels and transport were perfect." },
-  { name: "Karthik", stars: 4, text: "Very smooth and well-organized tour. Totally worth it!" },
-  { name: "Meena", stars: 5, text: "Friendly team and excellent service. Highly recommended!" },
-  { name: "Suresh", stars: 4, text: "Wonderful destinations and great coordination." },
-  { name: "Divya", stars: 5, text: "Loved the entire trip. Everything was taken care of!" },
-  { name: "Vignesh", stars: 5, text: "Professional service and very polite staff. Superb experience." },
-  { name: "Anitha", stars: 4, text: "Good packages and nice hotels. Will book again." },
-  { name: "Ravi", stars: 5, text: "Memorable journey with my family. Thank you Fundun Holidays!" },
-  { name: "Lakshmi", stars: 5, text: "Perfect planning and quick response. Totally satisfied!" }
+    { name: "Arun", stars: 5, text: "Amazing trip planning and great support!" },
+    { name: "Priya", stars: 5, text: "Best travel experience ever." },
+    { name: "Karthik", stars: 4, text: "Very smooth and well-organized tour." },
+    { name: "Meena", stars: 5, text: "Friendly team and excellent service." }
 ];
-
-const reviewSlider = document.getElementById("reviewSlider");
 let reviewIndex = 0;
 
 function renderSingleReview() {
-  if (!reviewSlider) return;
-
-  reviewSlider.innerHTML = "";
-  const review = heroReviews[reviewIndex];
-
-  const card = document.createElement("div");
-  card.className = "review-card";
-  card.innerHTML = `
-    <div class="review-header">
-      <div class="review-avatar">${review.name.charAt(0)}</div>
-      <div>
-        <div class="review-name">${review.name}</div>
-        <div class="review-stars">${"★".repeat(review.stars)}</div>
-      </div>
-    </div>
-    <div class="review-text">${review.text}</div>
-  `;
-
-  reviewSlider.appendChild(card);
-  reviewIndex = (reviewIndex + 1) % heroReviews.length;
+    const rs = document.getElementById("reviewSlider");
+    if (!rs) return;
+    const r = heroReviews[reviewIndex];
+    rs.innerHTML = `
+        <div class="review-card">
+            <div class="review-header">
+                <div class="review-avatar">${r.name.charAt(0)}</div>
+                <div><div class="review-name">${r.name}</div><div class="review-stars">${"★".repeat(r.stars)}</div></div>
+            </div>
+            <div class="review-text">${r.text}</div>
+        </div>
+    `;
+    reviewIndex = (reviewIndex + 1) % heroReviews.length;
 }
 
-renderSingleReview();
-setInterval(renderSingleReview, 3500);
-/* ===== Image Popup Script ===== */
-const popup = document.createElement("div");
-popup.classList.add("image-popup");
-popup.innerHTML = `
-  <span class="popup-close">&times;</span>
-  <img id="popupImg">
-`;
-document.body.appendChild(popup);
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🔔 LIVE NOTIFICATIONS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-const popupImg = document.getElementById("popupImg");
-const closeBtn = popup.querySelector(".popup-close");
-
-/* Open popup on slide image click */
-document.querySelectorAll(".slide img").forEach(img => {
-  img.addEventListener("click", () => {
-    popupImg.src = img.src;
-    popup.classList.add("active");
-  });
-});
-
-/* Close popup */
-closeBtn.addEventListener("click", () => {
-  popup.classList.remove("active");
-});
-
-popup.addEventListener("click", (e) => {
-  if(e.target === popup){
-    popup.classList.remove("active");
-  }
-});
-// Navbar scroll effect
-const navbar = document.getElementById('navbar');
-
-window.addEventListener('scroll', () => {
-  if(window.scrollY > 50){   // scroll threshold
-    navbar.classList.add('fixed');
-  } else {
-    navbar.classList.remove('fixed');
-  }
-});
-document.querySelectorAll('.s-item').forEach(item => {
-  item.addEventListener('click', () => {
-    const serviceName = item.querySelector('h4').textContent;
-
-    // Show in details box first for psychological feedback
-    document.getElementById('service-title').textContent = serviceName;
-    document.getElementById('service-desc').textContent = `Click to explore destinations for ${serviceName}.`;
-
-    // Map services to states/destination pages
-    const serviceMap = {
-      "School & College Package": "Tamil Nadu",
-      "Corporate Tours": "karnataka",
-      "Family Tours": "kerala",
-      "Custom Planning": "Tamil Nadu",
-      "Honeymoon Tours": "kerala"
-    };
-
-    // Open destination overlay page like Navbar
-    openDestinationPage(serviceMap[serviceName]);
-  });
-});
-// HERO IMAGE SLIDER
-const heroImages = [
-  'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239861/POSTER_bvgobj.png', 
-  'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769595950/hero_image_2_dxwrxu.png', 
-  'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769620540/img_post_rbz4dd.png',
+const bookingNotifications = [
+    { name: "Ram from Pudukkottai", package: "Ooty Honeymoon Package", time: "2 minutes ago" },
+    { name: "Dinesh & Karthikeyani", package: "Kerala Honeymoon Tour", time: "5 minutes ago" },
+    { name: "Arun from Bangalore", package: "Munnar Family Package", time: "8 minutes ago" },
+    { name: "Divya from Mumbai", package: "Kodaikanal Couple Package", time: "12 minutes ago" },
+    { name: "Vikram & Family", package: "Goa Beach Holiday", time: "15 minutes ago" },
+    { name: "Meena from Coimbatore", package: "Ramoji Film City Tour", time: "18 minutes ago" },
+    { name: "Suresh & Team", package: "Corporate Coorg Package", time: "22 minutes ago" },
+    { name: "Lakshmi from Hyderabad", package: "Alleppey Backwaters", time: "25 minutes ago" },
+    { name: "Arjun & Sneha", package: "Wayanad Nature Tour", time: "30 minutes ago" },
+    { name: "Harini from Delhi", package: "Mysore Heritage Tour", time: "35 minutes ago" }
 ];
 
-const carouselContainer = document.querySelector('.carousel-container');
+let currentNotificationIndex = 0;
+let notificationTimeout = null;
 
-// Create slide divs dynamically
-heroImages.forEach((img, index) => {
-    const slide = document.createElement('div');
-    slide.classList.add('carousel-slide');
-    if(index === 0) slide.classList.add('active'); // first image active
-    slide.style.backgroundImage = `url('${img}')`;
-    carouselContainer.appendChild(slide);
-});
-
-const slides = document.querySelectorAll('.carousel-slide');
-let currentSlide = 0;
-
-// Function to show next slide
-function nextSlide() {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
+function showLiveNotification() {
+    const notificationDiv = document.getElementById("live-notification");
+    const notifText = document.getElementById("notif-text");
+    if (!notificationDiv || !notifText) return;
+    const n = bookingNotifications[currentNotificationIndex];
+    notifText.innerHTML = `<strong>${n.name}</strong> just booked <span style="color:#d4af37;">${n.package}</span> <span style="color:#999;">• ${n.time}</span>`;
+    notificationDiv.classList.add("show");
+    if (notificationTimeout) clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+        notificationDiv.classList.remove("show");
+        currentNotificationIndex = (currentNotificationIndex + 1) % bookingNotifications.length;
+        setTimeout(showLiveNotification, 8000);
+    }, 5000);
 }
 
-// Auto-slide every 5 seconds
-setInterval(nextSlide, 5000);
-// 1. Mouse Tracking for Body Glow (Spotlight Effect)
-document.addEventListener('mousemove', e => {
-    document.body.style.setProperty('--x', e.clientX + 'px');
-    document.body.style.setProperty('--y', e.clientY + 'px');
-});
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🚀 INIT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function openServiceBooking(serviceName) {
-    // Service name-aa location field-la pass pannrom
-    showBookingOptions(serviceName);
-}
-/************ VIEW DETAILS – ONLY VIEW BUTTON HOVER + CLICK ************/
+document.addEventListener("DOMContentLoaded", function() {
+    console.log("🌴 Fundun Holidays - Script Loaded!");
 
-function enableViewDetailsOnlyOnButton(state) {
-
-    document.querySelectorAll('.safari-card').forEach(card => {
-
-        const viewBtn = card.querySelector('.btn-white'); // VIEW PLACES
-        if (!viewBtn) return;
-
-        let hoverTimer;
-
-        const city = card.querySelector('h1')?.textContent;
-        if (!city) return;
-
-        const cityName = city.charAt(0) + city.slice(1).toLowerCase();
-
-        const openDetails = (e) => {
-            e.stopPropagation();
-            viewCityDetails(state, cityName);
-        };
-
-        // ✅ CLICK
-        viewBtn.addEventListener('click', openDetails);
-
-        // ✅ HOVER (Desktop only)
-        viewBtn.addEventListener('mouseenter', (e) => {
-            if ('ontouchstart' in window) return; // mobile ignore
-
-            hoverTimer = setTimeout(() => {
-                openDetails(e);
-            }, 300); // smooth delay
+    // Hero Carousel
+    const heroImages = [
+        'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239861/POSTER_bvgobj.png',
+        'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769595950/hero_image_2_dxwrxu.png',
+        'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769620540/img_post_rbz4dd.png'
+    ];
+    const carouselContainer = document.querySelector('.carousel-container');
+    if (carouselContainer) {
+        heroImages.forEach((img, i) => {
+            const slide = document.createElement('div');
+            slide.classList.add('carousel-slide');
+            if (i === 0) slide.classList.add('active');
+            slide.style.backgroundImage = `url('${img}')`;
+            carouselContainer.appendChild(slide);
         });
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000);
+    }
 
-        viewBtn.addEventListener('mouseleave', () => {
-            clearTimeout(hoverTimer);
+    // Mobile Menu
+    const mobileMenu = document.getElementById('mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
+    if (mobileMenu && navLinks) {
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenu.querySelector('i');
+            if (icon) { icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); }
         });
+        document.querySelectorAll('.nav-links li a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = mobileMenu.querySelector('i');
+                if (icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
+            });
+        });
+    }
 
-        // ❌ Stop bubbling to card
-        viewBtn.addEventListener('mousedown', e => e.stopPropagation());
+    // Navbar scroll
+    const navbar = document.getElementById('navbar');
+    if (navbar) {
+        window.addEventListener('scroll', () => { navbar.classList.toggle('fixed', window.scrollY > 50); }, { passive: true });
+    }
+
+    // Destination Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.getAttribute('data-filter');
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.state-container').forEach(container => {
+                container.style.display = (filter === 'all' || container.getAttribute('data-category') === filter) ? 'block' : 'none';
+            });
+        });
     });
-}
 
-/* ===== HOOK INTO DESTINATION PAGE ===== */
-const _originalOpenDestinationPage = openDestinationPage;
+    // Gallery
+    buildGallery();
 
-openDestinationPage = function(state) {
-    _originalOpenDestinationPage(state);
-
-    setTimeout(() => {
-        enableViewDetailsOnlyOnButton(state);
-    }, 200);
-};
-// MOBILE MENU TOGGLE LOGIC
-const mobileMenu = document.getElementById('mobile-menu');
-const navLinks = document.querySelector('.nav-links');
-
-if (mobileMenu) {
-    mobileMenu.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        // Hamburger icon-ah close icon-ah mathurathuku
-        const icon = mobileMenu.querySelector('i');
-        icon.classList.toggle('fa-bars');
-        icon.classList.toggle('fa-times');
+    // Make static gallery images (the .gallery-viewport fallback) clickable — open standalone lightbox
+    document.querySelectorAll('.gallery-viewport .slide img').forEach(img => {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', () => openStandaloneLightbox(img.src, img.alt || 'Gallery Image'));
     });
-}
 
-// Menu link click panna menu close aaganam
-document.querySelectorAll('.nav-links li a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        const icon = mobileMenu.querySelector('i');
-        icon.classList.add('fa-bars');
-        icon.classList.remove('fa-times');
+    // Reviews
+    renderSingleReview();
+    setInterval(renderSingleReview, 3500);
+
+    // Live Notifications
+    setTimeout(showLiveNotification, 3000);
+
+    console.log("✅ All systems ready!");
+    console.log("✅ Gallery: hover pause + click lightbox ACTIVE!");
+    console.log("✅ WhatsApp: Cancel/Close auto-send ACTIVE!");
+
+    // Exit confirmation — show a confirmation dialog when the user attempts to close/navigate away
+    window.addEventListener('beforeunload', function (e) {
+        const confirmationMessage = 'Are you sure you want to leave this site?';
+        e.preventDefault();
+        e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+        return confirmationMessage; // Gecko, WebKit, Chrome <34
     });
 });
