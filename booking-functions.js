@@ -47,7 +47,7 @@ function showBookingOptions(state, city = '') {
                 <!-- Price calculation removed as requested -->
                 
                 <button type="submit" style="background: linear-gradient(135deg, #d4af37, #b8962e); color: #000; border: none; padding: 14px; border-radius: 25px; font-weight: 600; cursor: pointer; font-size: 16px; transition: 0.3s; font-family: inherit;">
-                    SEND ENQUIRY VIA WHATSAPP
+                   CHECK AVAILABILITY
                 </button>
                 
                 <button type="button" onclick="closeBookingModal()" style="background: transparent; border: 1px solid #666; color: #aaa; padding: 10px; border-radius: 25px; cursor: pointer; transition: 0.3s; font-family: inherit;">

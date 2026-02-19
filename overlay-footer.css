@@ -1,0 +1,275 @@
+/*
+╔══════════════════════════════════════════════════════════════╗
+║  FUNDUN HOLIDAYS - OVERLAY FOOTER & WHATSAPP CSS            ║
+║  Footer and WhatsApp button inside destination overlay       ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🔧 DESTINATION OVERLAY WITH FOOTER
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+#detailPage {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.98) !important;
+    z-index: 10000 !important;
+    overflow-y: auto !important;
+    display: none !important;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#detailPage.active {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📌 WHATSAPP BUTTON INSIDE OVERLAY
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.overlay-whatsapp {
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    z-index: 10001 !important; /* Higher than overlay */
+    width: 65px;
+    height: 65px;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 32px;
+    box-shadow: 0 10px 40px rgba(37, 211, 102, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.overlay-whatsapp:hover {
+    transform: scale(1.15) rotate(10deg);
+    box-shadow: 0 15px 60px rgba(37, 211, 102, 0.7);
+}
+
+.overlay-whatsapp .whatsapp-pulse {
+    position: absolute;
+    inset: -5px;
+    border: 2px solid #25d366;
+    border-radius: 50%;
+    animation: whatsappPulseOverlay 2s ease infinite;
+}
+
+@keyframes whatsappPulseOverlay {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🦶 FOOTER INSIDE OVERLAY
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.overlay-footer {
+    position: relative !important;
+    margin-top: 80px;
+    background: linear-gradient(to bottom, #050505, #000);
+    border-top: 1px solid rgba(212, 175, 55, 0.15);
+    padding: 70px 20px 30px;
+}
+
+.overlay-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #d4af37,
+        transparent
+    );
+}
+
+/* Footer Links Clickable */
+#detailPage .footer-box ul li a,
+#detailPage .footer-dest-links li {
+    cursor: pointer;
+    transition: color 0.3s ease;
+    color: #999;
+    font-size: 14px;
+}
+
+#detailPage .footer-box ul li a:hover,
+#detailPage .footer-dest-links li:hover {
+    color: #d4af37 !important;
+    transform: translateX(5px);
+}
+
+#detailPage .footer-dest-links li {
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
+}
+
+#detailPage .footer-social a:hover {
+    background: #d4af37;
+    color: #000;
+    transform: translateY(-5px) rotate(10deg);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🔼 BACK TO TOP BUTTON (Inside Overlay)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.back-to-top-overlay {
+    position: fixed;
+    bottom: 110px;
+    right: 25px;
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #d4af37, #b8962e);
+    border: none;
+    border-radius: 50%;
+    color: #000;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 10001;
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-to-top-overlay:hover {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6);
+}
+
+.back-to-top-overlay i {
+    animation: arrowBounce 2s ease infinite;
+}
+
+@keyframes arrowBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📱 MOBILE RESPONSIVE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 768px) {
+    
+    /* WhatsApp Button - Smaller on Mobile */
+    .overlay-whatsapp {
+        width: 55px !important;
+        height: 55px !important;
+        font-size: 26px !important;
+        bottom: 20px !important;
+        right: 20px !important;
+    }
+    
+    /* Back to Top Button */
+    .back-to-top-overlay {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        bottom: 90px;
+        right: 20px;
+    }
+    
+    /* Footer Inside Overlay - Mobile Adjustments */
+    .overlay-footer {
+        margin-top: 50px;
+        padding: 50px 20px 30px;
+    }
+    
+    .overlay-footer .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+    
+    .overlay-footer .footer-box:nth-child(1) {
+        grid-column: span 2;
+        text-align: center;
+        border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        padding-bottom: 25px;
+    }
+    
+    .overlay-footer .footer-social {
+        justify-content: center;
+    }
+    
+    .overlay-footer .footer-box:nth-child(3) {
+        display: none;
+    }
+    
+    /* Certificate in Footer - Mobile Only */
+    .overlay-footer .footer-certificate {
+        display: block !important;
+        width: 100px;
+        margin: 20px auto 10px;
+        border-radius: 12px;
+        border: 2px solid #d4af37;
+        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
+    }
+}
+
+@media (max-width: 480px) {
+    
+    /* Adjust buttons for very small screens */
+    .overlay-whatsapp {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 24px !important;
+    }
+    
+    .back-to-top-overlay {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        bottom: 80px;
+    }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🔒 PREVENT BODY SCROLL WHEN OVERLAY IS OPEN
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+body.overlay-open {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ✨ SMOOTH TRANSITIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+#detailPage {
+    transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+#detailPage:not(.active) {
+    visibility: hidden;
+}
+
+#detailPage.active {
+    visibility: visible;
+}

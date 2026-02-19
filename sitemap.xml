@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+        
+  <!-- Homepage -->
+  <url>
+    <loc>https://www.fundunholidays.com/</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239861/POSTER_bvgobj.png</image:loc>
+      <image:title>Fundun Holidays - Premium Travel Packages</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Destinations Section -->
+  <url>
+    <loc>https://www.fundunholidays.com/#destinations</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Tamil Nadu Destinations -->
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/ooty</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850347/Ooty_sm1awg.png</image:loc>
+      <image:title>Ooty Tour Package - Hill Station</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/kodaikanal</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850389/kodaikanal_rrm80l.png</image:loc>
+      <image:title>Kodaikanal Tour Package</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/kanyakumari</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850491/Kannayakumari_dsszcl.png</image:loc>
+      <image:title>Kanyakumari Tour Package</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Kerala Destinations -->
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/munnar</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850359/munnar_bjo4pq.png</image:loc>
+      <image:title>Munnar Honeymoon Package - Tea Gardens</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/alleppey</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850439/alleppey_eg4fs5.png</image:loc>
+      <image:title>Alleppey Houseboat Package - Backwaters</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/wayanad</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850416/wayanadu_gpawkt.png</image:loc>
+      <image:title>Wayanad Adventure Package</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Karnataka Destinations -->
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/coorg</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769942817/coorg_hc1qce.jpg</image:loc>
+      <image:title>Coorg Coffee Estate Tour</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/mysore</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769851229/mysore_aatmtu.png</image:loc>
+      <image:title>Mysore Palace Heritage Tour</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://www.fundunholidays.com/destinations/goa</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/drlg1t6pk/image/upload/v1769626372/goa_eba8v5.png</image:loc>
+      <image:title>Goa Beach Package</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Services -->
+  <url>
+    <loc>https://www.fundunholidays.com/#services</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Offers -->
+  <url>
+    <loc>https://www.fundunholidays.com/#offers</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Contact -->
+  <url>
+    <loc>https://www.fundunholidays.com/#contact</loc>
+    <lastmod>2026-02-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>
