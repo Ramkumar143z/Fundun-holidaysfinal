@@ -1092,9 +1092,9 @@ function renderSingleReview() {
 
 const bookingNotifications = [
     { name: "Ram from Pudukkottai", package: "Ooty Honeymoon Package", time: "2 minutes ago" },
-    { name: "Dinesh & Karthikeyani", package: "Kerala Honeymoon Tour", time: "5 minutes ago" },
+    { name: "Arun & archana ", package: "Kerala Honeymoon Tour", time: "5 minutes ago" },
     { name: "Arun from Bangalore", package: "Munnar Family Package", time: "8 minutes ago" },
-    { name: "Divya from Mumbai", package: "Kodaikanal Couple Package", time: "12 minutes ago" },
+    { name: "Vaishnavi & suriya", package: "Kodaikanal Couple Package", time: "12 minutes ago" },
     { name: "Vikram & Family", package: "Goa Beach Holiday", time: "15 minutes ago" },
     { name: "Meena from Coimbatore", package: "Ramoji Film City Tour", time: "18 minutes ago" },
     { name: "Suresh & Team", package: "Corporate Coorg Package", time: "22 minutes ago" },
@@ -1111,7 +1111,7 @@ function showLiveNotification() {
     const notifText = document.getElementById("notif-text");
     if (!notificationDiv || !notifText) return;
     const n = bookingNotifications[currentNotificationIndex];
-    notifText.innerHTML = `<strong>${n.name}</strong> just booked <span style="color:#d4af37;">${n.package}</span> <span style="color:#999;">• ${n.time}</span>`;
+    notifText.innerHTML = `<strong>${n.name}</strong> just viewed <span style="color:#d4af37;">${n.package}</span> <span style="color:#999;">• ${n.time}</span>`;
     notificationDiv.classList.add("show");
     if (notificationTimeout) clearTimeout(notificationTimeout);
     notificationTimeout = setTimeout(() => {
@@ -1215,4 +1215,193 @@ document.addEventListener("DOMContentLoaded", function() {
         e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
         return confirmationMessage; // Gecko, WebKit, Chrome <34
     });
+});
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🖼️ FULL GALLERY SYSTEM
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+const GALLERY_IMAGES = [
+  { id:1,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239844/img29_jeheip.jpg",        title:"Scenic Hills",     place:"Tamil Nadu" },
+  { id:2,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239792/img12_bl8rzq.jpg",      title:"Valley View",      place:"Kerala" },
+  { id:3,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239844/img31_etblj9.jpg",      title:"Nature Trail",     place:"Karnataka" },
+  { id:4,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239846/img5_nfnuos.jpg",      title:"Golden Sunrise",   place:"Ooty" },
+  { id:5,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1770658100/ven_pxvtw3.jpg",      title:"Misty Mountains",  place:"Kodaikanal" },
+  { id:6,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771500855/IMG-20260119-WA0003_ooqgs4.jpg",        title:"Green Estates",    place:"Munnar" },
+  { id:7,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771598718/SAVE_20260220_195925.jpg_ugp7yp.jpg",        title:"Backwater Bliss",  place:"Alleppey" },
+  { id:8,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771598813/SAVE_20260220_195857.jpg_xzyueg.jpg",      title:"Heritage Glow",    place:"Mysore" },
+  { id:9,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771598939/SAVE_20260220_200236.jpg_i52v8c.jpg",       title:"Queen of Hills",   place:"Ooty" },
+  { id:10, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599074/SAVE_20260220_195539.jpg_knavss.jpg",     title:"Tea Garden",       place:"Munnar" },
+  { id:11, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599162/SAVE_20260220_195852.jpg_mi2tjj.jpg", title:"Princess Hills",   place:"Kodaikanal" },
+  { id:12, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769497258/party_c0ls8b.jpg",   title:"Venice of East",   place:"Alleppey" },
+  { id:13, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239845/img34_dienml.jpg",   title:"Wild Wayanad",     place:"Wayanad" },
+  { id:14, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239827/img25_ng8p1i.jpg",     title:"Palace City",      place:"Mysore" },
+  { id:15, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239794/img24_vyrnov.jpg",      title:"Coffee Country",   place:"Coorg" },
+  { id:16, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599250/SAVE_20260220_195930.jpg_mknim3.jpg",        title:"Beach Paradise",   place:"Goa" },
+  { id:17, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599444/SAVE_20260220_195821.jpg_zk3tll.jpg", title:"Land's End",    place:"Kanyakumari" },
+  { id:18, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599538/SAVE_20260220_195750.jpg_woa3uw.jpg",    title:"Green Meadows",    place:"Vagamon" },
+  { id:19, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599771/SAVE_20260220_195600.jpg_ochwoz.jpg",   title:"City of Pearls",   place:"Hyderabad" },
+  { id:20, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239792/img13_ikxyt0.jpg",      title:"Cinematic World",  place:"Ramoji" },
+  { id:21, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599888/SAVE_20260220_200201.jpg_pb19hk.jpg",      title:"Cinematic World",  place:"Ramoji" },
+
+];
+
+let currentFilter = 'All';
+let filteredImages = [...GALLERY_IMAGES];
+let currentLbIndex = 0;
+
+// ── Open Full Gallery ──────────────────────────────────────
+function openFullGallery() {
+  const overlay = document.getElementById('full-gallery-overlay');
+  overlay.style.display = 'block';
+  document.body.classList.add('overlay-open');
+  setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+  buildFilterPills();
+  renderGalleryGrid(GALLERY_IMAGES);
+}
+
+// ── Close Full Gallery ─────────────────────────────────────
+function closeFullGallery() {
+  const overlay = document.getElementById('full-gallery-overlay');
+  overlay.style.opacity = '0';
+  document.body.classList.remove('overlay-open');
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    overlay.scrollTop = 0;
+  }, 380);
+}
+
+// ── Build Filter Pills ─────────────────────────────────────
+function buildFilterPills() {
+  const bar = document.getElementById('gallery-filter-bar');
+  const places = ['All', ...new Set(GALLERY_IMAGES.map(i => i.place))];
+  bar.innerHTML = '';
+  places.forEach(p => {
+    const btn = document.createElement('button');
+    btn.textContent = p;
+    btn.onclick = () => {
+      currentFilter = p;
+      filteredImages = p === 'All' ? [...GALLERY_IMAGES] : GALLERY_IMAGES.filter(i => i.place === p);
+      document.getElementById('gallery-count-display').textContent = filteredImages.length;
+      renderGalleryGrid(filteredImages);
+      bar.querySelectorAll('button').forEach(b => {
+        b.style.background = 'rgba(255,255,255,0.05)';
+        b.style.borderColor = 'rgba(255,255,255,0.1)';
+        b.style.color = '#aaa';
+      });
+      btn.style.background = 'rgba(212,175,55,0.2)';
+      btn.style.borderColor = '#d4af37';
+      btn.style.color = '#d4af37';
+    };
+    btn.style.cssText = `background:${p==='All'?'rgba(212,175,55,0.2)':'rgba(255,255,255,0.05)'};border:1px solid ${p==='All'?'#d4af37':'rgba(255,255,255,0.1)'};color:${p==='All'?'#d4af37':'#aaa'};padding:7px 18px;border-radius:30px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.25s ease;letter-spacing:0.4px;font-family:'Poppins',sans-serif;`;
+    bar.appendChild(btn);
+  });
+}
+
+// ── Render Grid ────────────────────────────────────────────
+function renderGalleryGrid(images) {
+  const grid = document.getElementById('full-gallery-grid');
+  grid.innerHTML = '';
+  images.forEach((img, idx) => {
+    const tall = idx % 5 === 0 || idx % 7 === 3;
+    const card = document.createElement('div');
+    card.style.cssText = `border-radius:14px;overflow:hidden;position:relative;background:#111;grid-row:${tall ? 'span 2' : 'span 1'};cursor:pointer;animation:gridItemIn 0.5s ease both;animation-delay:${idx * 0.055}s;`;
+
+    card.innerHTML = `
+      <img src="${img.src}" alt="${img.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/400x300/111/d4af37?text=${encodeURIComponent(img.title)}'">
+      <div class="gcard-overlay" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,transparent 55%);opacity:0;transition:opacity 0.35s ease;display:flex;align-items:flex-end;">
+        <div style="padding:14px;">
+          <div style="font-size:10px;color:#d4af37;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">📍 ${img.place}</div>
+          <div style="font-size:14px;color:#fff;font-weight:700;margin-bottom:6px;">${img.title}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.6);">🔍 Click to enlarge</div>
+        </div>
+      </div>
+      <div style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);border:1px solid rgba(212,175,55,0.4);color:#d4af37;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;backdrop-filter:blur(6px);">${idx + 1}</div>
+    `;
+
+    // Hover effects
+    card.addEventListener('mouseenter', () => {
+      card.querySelector('img').style.transform = 'scale(1.08)';
+      card.querySelector('.gcard-overlay').style.opacity = '1';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.querySelector('img').style.transform = 'scale(1)';
+      card.querySelector('.gcard-overlay').style.opacity = '0';
+    });
+
+    card.addEventListener('click', () => openLightboxAt(idx));
+    grid.appendChild(card);
+  });
+}
+
+// ── Lightbox Open ──────────────────────────────────────────
+function openLightboxAt(index) {
+  currentLbIndex = index;
+  const lb = document.getElementById('gallery-lightbox');
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  updateLightbox();
+
+  // Build thumbnails once
+  const thumbs = document.getElementById('lb-thumbs');
+  thumbs.innerHTML = '';
+  filteredImages.forEach((img, i) => {
+    const t = document.createElement('img');
+    t.src = img.src;
+    t.alt = img.title;
+    t.style.cssText = `width:48px;height:36px;object-fit:cover;border-radius:7px;cursor:pointer;flex-shrink:0;transition:all 0.25s ease;border:2px solid ${i === index ? '#d4af37' : 'transparent'};opacity:${i === index ? '1' : '0.5'};`;
+    t.onclick = () => { currentLbIndex = i; updateLightbox(); };
+    thumbs.appendChild(t);
+  });
+}
+
+// ── Update Lightbox ────────────────────────────────────────
+function updateLightbox() {
+  const img = filteredImages[currentLbIndex];
+  const mainImg = document.getElementById('lb-main-img');
+  mainImg.style.opacity = '0';
+  setTimeout(() => {
+    mainImg.src = img.src;
+    mainImg.onload = () => { mainImg.style.opacity = '1'; };
+  }, 150);
+
+  document.getElementById('lb-counter').innerHTML = `<span style="font-size:18px;font-weight:900;color:#d4af37;">${currentLbIndex + 1}</span><span style="font-size:13px;color:#555;margin:0 4px;">/</span><span style="font-size:13px;color:#777;">${filteredImages.length}</span>`;
+
+  document.getElementById('lb-caption').innerHTML = `<span style="font-size:15px;font-weight:700;color:#fff;">${img.title}</span><span style="font-size:12px;color:#d4af37;font-weight:600;">📍 ${img.place}</span>`;
+
+  // Update thumb highlights
+  const thumbs = document.getElementById('lb-thumbs');
+  if (thumbs) {
+    thumbs.querySelectorAll('img').forEach((t, i) => {
+      t.style.border = i === currentLbIndex ? '2px solid #d4af37' : '2px solid transparent';
+      t.style.opacity = i === currentLbIndex ? '1' : '0.5';
+    });
+    thumbs.querySelectorAll('img')[currentLbIndex]?.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }
+}
+
+// ── Lightbox Navigate ──────────────────────────────────────
+function lbNav(dir) {
+  currentLbIndex = (currentLbIndex + dir + filteredImages.length) % filteredImages.length;
+  updateLightbox();
+}
+
+// ── Close Lightbox ─────────────────────────────────────────
+function closeLightboxGallery() {
+  document.getElementById('gallery-lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ── Keyboard Support ───────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  const lb = document.getElementById('gallery-lightbox');
+  if (lb && lb.style.display === 'flex') {
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft')  lbNav(-1);
+    if (e.key === 'Escape')     closeLightboxGallery();
+    return;
+  }
+  const overlay = document.getElementById('full-gallery-overlay');
+  if (overlay && overlay.style.opacity === '1') {
+    if (e.key === 'Escape') closeFullGallery();
+  }
 });
