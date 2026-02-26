@@ -1,1407 +1,1489 @@
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🌴 FUNDUN HOLIDAYS - COMPLETE SCRIPT (ALL FEATURES)
-//  ✅ Gallery with hover pause + click lightbox
-//  ✅ WhatsApp booking form
-//  ✅ Destination pages
-//  ✅ All errors fixed
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ===== LOGO LOADER =====
+var LOGO_SRC = "https://res.cloudinary.com/drlg1t6pk/image/upload/v1771854440/1_1_p0yx8f.png";
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📋 SMOOTH SCROLL
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function setLogos() {
+  document.querySelectorAll('img[alt="MSEED"]').forEach(function (img) {
+    img.src = LOGO_SRC;
+    img.style.display = 'block';
+  });
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
+  var navLogo = document.querySelector('.navbar-logo');
+  if (navLogo) {
+    var navImg = navLogo.querySelector('img');
+    if (!navImg) {
+      navLogo.innerHTML = '<img src="' + LOGO_SRC + '" alt="MSEED" style="height:44px;width:auto;object-fit:contain;">';
+    } else {
+      navImg.src = LOGO_SRC;
+      navImg.style.height = '44px';
+      navImg.style.width = 'auto';
+      navImg.style.objectFit = 'contain';
+    }
+  }
+
+  var splashLogo = document.querySelector('.splash-logo');
+  if (splashLogo) {
+    var splashImg = splashLogo.querySelector('img');
+    if (!splashImg) {
+      var newImg = document.createElement('img');
+      newImg.src = LOGO_SRC;
+      newImg.alt = 'MSEED';
+      newImg.style.cssText = 'width:280px;height:auto;object-fit:contain;';
+      splashLogo.insertBefore(newImg, splashLogo.firstChild);
+    } else {
+      splashImg.src = LOGO_SRC;
+    }
+  }
+
+  var footerBrand = document.querySelector('.footer-brand');
+  if (footerBrand) {
+    var footerImg = footerBrand.querySelector('img');
+    if (!footerImg) {
+      var fImg = document.createElement('img');
+      fImg.src = LOGO_SRC;
+      fImg.alt = 'MSEED';
+      fImg.style.cssText = 'height:48px;width:auto;object-fit:contain;margin-bottom:16px;';
+      footerBrand.insertBefore(fImg, footerBrand.firstChild);
+    } else {
+      footerImg.src = LOGO_SRC;
+    }
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setLogos);
+} else {
+  setLogos();
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  setTimeout(setLogos, 100);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const portalQuery = urlParams.get('portal');
+  if (portalQuery) {
+    if (typeof navigate === 'function') {
+      navigate(portalQuery);
+    }
+  }
 });
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🔧 ABOUT PAGE TOGGLE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ===== NAVIGATION =====
+// ✅ FIX: Added 'inst-partners' to pages array
+const pages = ['portal', 'mseed', 'college-student', 'institution', 'inst-partners', 'inst-ev', 'junior', 'junior-student', 'school-inst'];
+function navigate(page) {
+  // Hide all pages
+  pages.forEach(p => {
+    const el = document.getElementById('page-' + p);
+    if (el) el.classList.remove('active');
+  });
 
-function toggleAbout(show) {
-    const aboutPage = document.getElementById("aboutPage");
-    if (!aboutPage) return;
-    if (show) {
-        aboutPage.style.display = "block";
-        aboutPage.classList.add("active");
-        document.body.classList.add("overlay-open");
-        setTimeout(() => { aboutPage.style.opacity = "1"; }, 10);
-    } else {
-        aboutPage.style.opacity = "0";
-        aboutPage.classList.remove("active");
-        document.body.classList.remove("overlay-open");
-        setTimeout(() => { aboutPage.style.display = "none"; }, 300);
-    }
-}
+  ['mseed-portal-select', 'junior-portal-select'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  💖 WISHLIST
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  if (page === 'portal') {
+    document.getElementById('page-portal').classList.add('active');
 
-function toggleWishlist(element) {
-    const icon = element.querySelector('i');
-    if (icon.classList.contains('far')) {
-        icon.classList.remove('far');
-        icon.classList.add('fas');
-        element.style.background = 'rgba(212, 175, 55, 0.2)';
-        element.style.borderColor = '#d4af37';
-        showQuickNotification('Added to wishlist! ❤️');
-    } else {
-        icon.classList.remove('fas');
-        icon.classList.add('far');
-        element.style.background = 'rgba(0, 0, 0, 0.6)';
-        element.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-        showQuickNotification('Removed from wishlist');
-    }
-}
+  } else if (page === 'mseed') {
+    document.getElementById('page-mseed').classList.add('active');
+    document.getElementById('mseed-portal-select').style.display = 'block';
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🗺️ DESTINATION DATA
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  } else if (page === 'college-student') {
+    document.getElementById('page-college-student').classList.add('active');
+    showTab('home');
 
-const destinations = {
-    "Tamil Nadu": {
-        "title": "Tamil Nadu Destinations",
-        "subtitle": "Explore the rich culture and natural beauty of Tamil Nadu",
-        "places": {
-            "Ooty": {
-                description: "Ooty, also known as Udhagamandalam, is a popular hill station in Tamil Nadu famous for its tea estates, botanical gardens, and colonial architecture.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850347/Ooty_sm1awg.png",
-                places: ["Boat House", "Pykara Dam", "Pykara Lake", "Rose Garden", "Tea Museum", "Pine Forest", "Shooting Point", "Karnataka Garden", "Doddapetta Peak"]
-            },
-            "Kodaikanal": {
-                description: "Kodaikanal is a charming hill town known for its pristine lakes, waterfalls, and scenic viewpoints.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850389/kodaikanal_rrm80l.png",
-                places: ["Silver Falls", "Kodaikanal Lake", "Bryant Park", "Coakers Park", "Poombarai", "Kookal", "Pillar Rock", "Guna Caves"]
-            },
-            "Yercaud": {
-                description: "Yercaud is a serene hill station known for its coffee plantations, lakes, and panoramic views.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850504/yercadu_vpquei.png",
-                places: ["Yercaud Lake", "Pagoda Point", "Loop Road", "Bears Cave", "Kiliyur Water Falls", "Servarayan Temple"]
-            },
-            "Kanyakumari": {
-                description: "Kanyakumari is the southernmost tip of India, famous for its stunning sunrise and sunset views.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850491/Kannayakumari_dsszcl.png",
-                places: ["Thiruvalluvar Statue", "Vivekananda Memorial Rock", "Sunset View Point", "Beach", "Padmanabhapuram Palace", "Papanasam Temple", "Manimuthar Dam", "Kuttralam"]
-            },
-            "Chennai": {
-                description: "Chennai, the capital of Tamil Nadu, is a vibrant city with rich history, temples, beaches, and modern attractions.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850626/chennai_tyxhra.png",
-                places: ["Marina Beach", "Mahabalipuram", "Santhome Church", "Birla Planetorium", "Elliotts Beach", "Kapaleeshwar Temple", "VGP Amusement Park"]
-            },
-            "Pondicherry": {
-                description: "Pondicherry, a former French colony, offers a blend of Indian and French cultures with beautiful beaches.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850641/pondicherry_ffgflu.png",
-                places: ["French Colony", "Paradise Beach", "Sacred Heart Basilica", "Rock Beach", "Auroville Beach", "Promenade Beach", "Chunnambar Boat House"]
-            }
-        }
-    },
-    "kerala": {
-        title: "Kerala Destinations",
-        subtitle: "Experience God's Own Country with its backwaters and hills",
-        places: {
-            "Cochin": {
-                description: "Cochin, also known as Kochi, is a vibrant city blending history, culture, and modernity.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239789/cochi_m11tfv.jpg",
-                places: ["Chotanikara Bhagavathy Temple", "Athi Rampadi Water Falls", "Cherai Beach", "Mattancherry Palace", "Hill Palace Museum", "Wonderla", "Bolgatti Palace", "Lulu Mall", "Vypen Beach"]
-            },
-            "Munnar": {
-                description: "Munnar is a picturesque hill station famous for its sprawling tea plantations and misty mountains.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850359/munnar_bjo4pq.png",
-                places: ["Mattupetty Dam", "Tea Museum", "Echo Point", "Top Station", "Kundala Lake", "Photo Point", "Rose Garden"]
-            },
-            "Wayanad": {
-                description: "Wayanad is a district known for its wildlife, waterfalls, and ancient caves.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850416/wayanadu_gpawkt.png",
-                places: ["Edakkal Caves", "Chembra Peak", "Lakkidi View Point", "Soochippara Water Falls", "Meenmutty Falls", "Banasurasagar Dam"]
-            },
-            "Alleppey": {
-                description: "Alleppey, famous for its backwaters, is a serene destination for houseboat cruises.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850439/alleppey_eg4fs5.png",
-                places: ["Backwaters", "Alappuzha Beach", "Light House", "St. Mary Forane Church", "Vembanad Lake"]
-            },
-            "Vagamon": {
-                description: "Vagamon is a tranquil hill station with meadows, pine forests, and panoramic views.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850545/vagamon_xoktr4.png",
-                places: ["Thangalpara", "Kurushimala", "Pine Forest", "Vagamon Meadows", "Ulupunni Tunnel", "Echo Point", "Idukki Dam", "Marmala Falls"]
-            },
-            "Trivandrum": {
-                description: "Trivandrum, the capital of Kerala, is known for its temples, museums, and beautiful beaches.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850569/thiruvandrum_zxqmjj.png",
-                places: ["Padmanabha Swamy Temple", "Chithra Art Gallery", "Zoological Park", "Napier Museum", "Magic Planet", "Mall of Travancore", "Kovalam Light House", "Kovalam Beach"]
-            },
-            "Varkala": {
-                description: "Varkala is a coastal town famous for its red cliffs, pristine beaches, and Ayurvedic treatments.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850657/varkala_cjyrib.png",
-                places: ["Varkala Beach", "Varkala Cliff", "Odayam Beach", "Anjengo Fort Lighthouse"]
-            },
-            "Thekkady": {
-                description: "Thekkady is home to Periyar National Park, offering wildlife safaris and boat rides.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850674/thekkady_j99sk0.png",
-                places: ["Periyar National Park", "Thekkady Lake", "Hill King", "Vandiperiyar"]
-            }
-        }
-    },
-    "karnataka": {
-        title: "Karnataka Destinations",
-        subtitle: "Discover the heritage and adventure in Karnataka",
-        places: {
-            "Mysore": {
-                description: "Mysore, the cultural capital of Karnataka, is renowned for its palaces, gardens, and rich heritage.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769851229/mysore_aatmtu.png",
-                places: ["Mysore Palace", "Mysore Zoo", "Shuka Vana", "Brindavan Garden", "Chamundeshwari Temple", "Balmuri Falls", "St. Philomena Church", "GRS Fantasy Amusement Park"]
-            },
-            "Coorg": {
-                description: "Coorg, known as the Scotland of India, offers coffee plantations, waterfalls, and adventure activities.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769942817/coorg_hc1qce.jpg",
-                places: ["Golden Temple", "Kaveri Nisargadhama", "Dubare Forest", "Harangi Dam", "White Water River Rafting", "Chiklihole Reservoir", "Abbey Falls", "Raja Seat", "Mandalpete Jeep Trekking"]
-            },
-            "Bangalore": {
-                description: "Bangalore, the Silicon Valley of India, is a bustling city with parks, palaces, and modern attractions.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850454/Bangalore_ja0ghv.png",
-                places: ["Wonderla", "Lalbagh Garden", "Bannerghatta National Park", "Bangalore Palace", "Cubbon Park", "Iskcon Temple", "Triusultan Palace", "Commercial Street Shopping", "Visvesvaraya Museum", "UB City Mall"]
-            },
-            "Chikmagalur": {
-                description: "Chikmagalur is a coffee-growing region famous for its hills, waterfalls, and trekking spots.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850466/chikmangalore_e3duxj.png",
-                places: ["Siri Statue", "Mullayanagiri", "Baba Budan Giri", "Seethalayangiri", "Z-Point Trekking", "Honnamana Halla", "Ukkada Water Falls", "Jhari Falls", "Bandi Kallu Gudda Sunset Point"]
-            },
-            "Mangalore": {
-                description: "Mangalore is a coastal city known for its beaches, temples, and seafood cuisine.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850586/mangalore_xyki1k.png",
-                places: ["Panambur Beach", "Pilikula Tourism", "Tannirbhavi Beach", "Mangaladevi Temple", "Someshwar Beach", "Forum Fiza Mall"]
-            },
-            "Murudeshwar": {
-                description: "Murudeshwar is famous for its giant Shiva statue, beach, and the Murudeshwar Fort.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850601/murudeshwar_kr4vv6.png",
-                places: ["Shiva Temple", "Murudeshwar Beach", "Murudeshwar Fort", "Jog Falls"]
-            },
-            "Gokarna & Udupi": {
-                description: "Gokarna and Udupi offer pristine beaches, ancient temples, and spiritual retreats.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850700/gokarna_udupi_idsedu.png",
-                places: ["Om Beach", "Paradise Beach", "Kudle Beach", "Mahabaleshwara Temple", "Water Sports", "Yana Caves", "Halfmoon Beach", "St. Mary's Island", "Krishna Temple", "Anantheshwara Temple"]
-            },
-            "Dandeli": {
-                description: "Dandeli is an adventure hub with river rafting, wildlife, and eco-tourism activities.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850712/dandeli_ebgqug.png",
-                places: ["Moulangi Eco Park", "Disney Park", "Supa Dam", "Kali River Water Sports", "Zorbing", "Rafting", "Jacuzzi Bath", "Zipline Activities", "Trekking", "Kayaking"]
-            }
-        }
-    },
-    "Hyderabad": {
-        title: "Hyderabad Destinations",
-        subtitle: "Explore the city of pearls and its historical sites",
-        places: {
-            "Charminar": {
-                description: "Charminar is an iconic monument symbolizing Hyderabad's rich history and architecture.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769666577/charmina_bpg1wb.jpg",
-                places: ["Charminar", "Laad Bazaar", "Mecca Masjid", "Chowmahalla Palace"]
-            },
-            "Golconda": {
-                description: "Golconda Fort is a magnificent fortress known for its acoustics and historical significance.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769666704/golgonda_aqxzrx.jpg",
-                places: ["Fort Entrance", "Sound & Light", "Qutub Tombs", "Taramati Baradari"]
-            },
-            "Ramoji Film City": {
-                description: "Ramoji Film City is Asia's largest film studio offering tours and entertainment.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769629047/ramoj_lhqfct.jpg",
-                places: ["Film Sets", "Bahubali Set", "Studio Tour", "Adventure Park"]
-            },
-            "Hussain Sagar": {
-                description: "Hussain Sagar is a large lake with the Buddha statue, perfect for boating and picnics.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769944988/hussian_duqbik.jpg",
-                places: ["Hussain Sagar Lake", "Buddha Statue"]
-            },
-            "Birla Mandir": {
-                description: "Birla Mandir is a beautiful Hindu temple made of white marble with intricate carvings.",
-                image: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769945004/birla_nsnjea.jpg",
-                places: ["Birla Temple", "Hindu Temple"]
-            }
-        }
-    }
-};
+  } else if (page === 'institution') {
+    document.getElementById('page-institution').classList.add('active');
+    setTimeout(initInstitutionPortal, 100);
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📋 FORM DATA
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-let formData = { name: '', phone: '', persons: 1, days: 3, location: '' };
-let hasDataBeenSent = false;
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📱 WHATSAPP SEND
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function sendToWhatsApp() {
-    const name = formData.name.trim();
-    const phone = formData.phone.trim();
-    if (!name || !phone) return false;
-    if (hasDataBeenSent) return false;
-
-    const msg = `🔔 NEW BOOKING ENQUIRY - Fundun Holidays
-
-👤 Name: ${formData.name}
-📱 Phone: ${formData.phone}
-📍 Location: ${formData.location}
-👥 Persons: ${formData.persons}
-📅 Days: ${formData.days}
-
-⏰ Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`;
-
-    const whatsappURL = `https://wa.me/917558138968?text=${encodeURIComponent(msg)}`;
-    const w = window.open(whatsappURL, "_blank");
-
-    if (w) {
-        hasDataBeenSent = true;
-        return true;
-    } else {
-        alert('Please allow popups!');
-        return false;
-    }
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🖼️ GALLERY DATA
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-const galleryImages = [
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239861/POSTER_bvgobj.png", title: "Fundun Holidays", caption: "Explore Amazing Destinations" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769595950/hero_image_2_dxwrxu.png", title: "Beautiful Kerala", caption: "God's Own Country" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769620540/img_post_rbz4dd.png", title: "Tamil Nadu", caption: "Rich Culture & Heritage" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850347/Ooty_sm1awg.png", title: "Ooty", caption: "Queen of Hill Stations" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850359/munnar_bjo4pq.png", title: "Munnar", caption: "Tea Garden Paradise" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850389/kodaikanal_rrm80l.png", title: "Kodaikanal", caption: "Princess of Hill Stations" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769850439/alleppey_eg4fs5.png", title: "Alleppey", caption: "Venice of the East" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769851229/mysore_aatmtu.png", title: "Mysore", caption: "City of Palaces" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769942817/coorg_hc1qce.jpg", title: "Coorg", caption: "Scotland of India" },
-    { src: "https://res.cloudinary.com/drlg1t6pk/image/upload/v1769629047/ramoj_lhqfct.jpg", title: "Ramoji Film City", caption: "Asia's Largest Film Studio" }
-];
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🎠 GALLERY STATE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-let galleryCurrentSlide = 0;
-let galleryAutoSlideTimer = null;
-let galleryIsPaused = false;
-let lightboxCurrentIndex = 0;
-let touchStartX = 0;
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🏗️ BUILD GALLERY
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function buildGallery() {
-    const galleryContainer = document.getElementById('galleryContainer');
-    if (!galleryContainer) return;
-
-    galleryContainer.innerHTML = `
-        <div id="galleryWrapper" style="
-            position: relative; width: 100%; overflow: hidden;
-            border-radius: 20px; cursor: pointer; user-select: none;
-        ">
-            <!-- Slides -->
-            <div id="galleryTrack" style="display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);">
-                ${galleryImages.map((img, i) => `
-                    <div class="gallery-slide" data-index="${i}" style="min-width:100%; position:relative; overflow:hidden;">
-                        <img src="${img.src}" alt="${img.title}" style="
-                            width:100%; height:500px; object-fit:cover; display:block;
-                            transition:transform 0.4s ease; pointer-events:none;
-                        " onerror="this.src='https://via.placeholder.com/800x500/1a1a1a/d4af37?text=${encodeURIComponent(img.title)}'">
-
-                        <div class="slide-overlay" style="
-                            position:absolute; inset:0;
-                            background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 50%);
-                            opacity:0; transition:opacity 0.3s ease;
-                            display:flex; align-items:flex-end; padding:30px;
-                        ">
-                            <div>
-                                <h3 style="color:#d4af37; font-size:24px; margin:0; font-family:'Poppins',sans-serif; font-weight:700;">${img.title}</h3>
-                                <p style="color:#fff; font-size:14px; margin:5px 0 0; opacity:0.8;">${img.caption}</p>
-                                <span style="display:inline-block; margin-top:10px; padding:8px 20px;
-                                    background:rgba(212,175,55,0.3); border:1px solid #d4af37;
-                                    border-radius:25px; color:#d4af37; font-size:12px; font-weight:600;">
-                                    <i class="fas fa-expand"></i> CLICK TO VIEW
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-
-            <!-- Prev Arrow -->
-            <button onclick="galleryPrev(event)" style="
-                position:absolute; left:15px; top:50%; transform:translateY(-50%);
-                background:rgba(0,0,0,0.7); border:2px solid rgba(212,175,55,0.5);
-                color:#d4af37; width:50px; height:50px; border-radius:50%;
-                font-size:18px; cursor:pointer; z-index:10;
-                display:flex; align-items:center; justify-content:center;
-                transition:all 0.3s ease; backdrop-filter:blur(5px);
-            " onmouseover="this.style.background='rgba(212,175,55,0.3)'"
-               onmouseout="this.style.background='rgba(0,0,0,0.7)'">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-
-            <!-- Next Arrow -->
-            <button onclick="galleryNext(event)" style="
-                position:absolute; right:15px; top:50%; transform:translateY(-50%);
-                background:rgba(0,0,0,0.7); border:2px solid rgba(212,175,55,0.5);
-                color:#d4af37; width:50px; height:50px; border-radius:50%;
-                font-size:18px; cursor:pointer; z-index:10;
-                display:flex; align-items:center; justify-content:center;
-                transition:all 0.3s ease; backdrop-filter:blur(5px);
-            " onmouseover="this.style.background='rgba(212,175,55,0.3)'"
-               onmouseout="this.style.background='rgba(0,0,0,0.7)'">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-
-            <!-- Dots -->
-            <div id="galleryDots" style="
-                position:absolute; bottom:15px; left:50%; transform:translateX(-50%);
-                display:flex; gap:8px; z-index:10;
-            ">
-                ${galleryImages.map((_, i) => `
-                    <button onclick="galleryGoTo(${i})" id="dot-${i}" style="
-                        width:${i===0?'24px':'8px'}; height:8px; border-radius:4px;
-                        background:${i===0?'#d4af37':'rgba(255,255,255,0.5)'};
-                        border:none; cursor:pointer; transition:all 0.3s ease; padding:0;
-                    "></button>
-                `).join('')}
-            </div>
-
-            <!-- Counter -->
-            <div id="galleryCounter" style="
-                position:absolute; top:15px; left:15px;
-                background:rgba(0,0,0,0.7); border:1px solid rgba(212,175,55,0.3);
-                color:#fff; padding:6px 14px; border-radius:20px;
-                font-size:12px; font-weight:600; z-index:10;
-            ">1 / ${galleryImages.length}</div>
-
-            <!-- Pause indicator -->
-            <div id="galleryPauseIndicator" style="
-                position:absolute; top:15px; right:15px;
-                background:rgba(0,0,0,0.7); border:1px solid rgba(212,175,55,0.5);
-                color:#d4af37; padding:6px 14px; border-radius:20px;
-                font-size:12px; font-weight:600; opacity:0;
-                transition:opacity 0.3s ease; pointer-events:none; z-index:10;
-            "><i class="fas fa-pause"></i> PAUSED</div>
-        </div>
-    `;
-
-    setupGalleryEvents();
-    startGalleryAutoSlide();
-    console.log('✅ Gallery built:', galleryImages.length, 'images');
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  ⚙️ GALLERY EVENTS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function setupGalleryEvents() {
-    const wrapper = document.getElementById('galleryWrapper');
-    if (!wrapper) return;
-
-    // Hover → PAUSE
-    wrapper.addEventListener('mouseenter', () => {
-        galleryIsPaused = true;
-        clearInterval(galleryAutoSlideTimer);
-        const ind = document.getElementById('galleryPauseIndicator');
-        if (ind) ind.style.opacity = '1';
-        // Show overlay on current slide
-        const slides = wrapper.querySelectorAll('.gallery-slide');
-        if (slides[galleryCurrentSlide]) {
-            const ov = slides[galleryCurrentSlide].querySelector('.slide-overlay');
-            if (ov) ov.style.opacity = '1';
-        }
-    });
-
-    wrapper.addEventListener('mouseleave', () => {
-        galleryIsPaused = false;
-        startGalleryAutoSlide();
-        const ind = document.getElementById('galleryPauseIndicator');
-        if (ind) ind.style.opacity = '0';
-        wrapper.querySelectorAll('.slide-overlay').forEach(ov => ov.style.opacity = '0');
-    });
-
-    // Each slide: click → lightbox, hover → overlay
-    wrapper.querySelectorAll('.gallery-slide').forEach((slide, index) => {
-        slide.addEventListener('click', (e) => {
-            if (e.target.closest('button')) return;
-            openGalleryLightbox(index);
-        });
-
-        slide.addEventListener('mouseenter', () => {
-            const ov = slide.querySelector('.slide-overlay');
-            if (ov) ov.style.opacity = '1';
-        });
-
-        slide.addEventListener('mouseleave', () => {
-            const ov = slide.querySelector('.slide-overlay');
-            if (ov) ov.style.opacity = '0';
-        });
-    });
-
-    // Touch swipe
-    wrapper.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        galleryIsPaused = true;
-        clearInterval(galleryAutoSlideTimer);
-    }, { passive: true });
-
-    wrapper.addEventListener('touchend', (e) => {
-        const diff = touchStartX - e.changedTouches[0].screenX;
-        if (Math.abs(diff) > 50) {
-            diff > 0 ? galleryNextSlide() : galleryPrevSlide();
-        }
-        galleryIsPaused = false;
-        startGalleryAutoSlide();
-    }, { passive: true });
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  ▶️ GALLERY CONTROLS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function startGalleryAutoSlide() {
-    clearInterval(galleryAutoSlideTimer);
-    galleryAutoSlideTimer = setInterval(() => {
-        if (!galleryIsPaused) galleryNextSlide();
-    }, 4000);
-}
-
-function galleryGoTo(index) {
-    galleryCurrentSlide = index;
-    const track = document.getElementById('galleryTrack');
-    if (track) track.style.transform = `translateX(-${index * 100}%)`;
-    // Update dots
-    galleryImages.forEach((_, i) => {
-        const dot = document.getElementById(`dot-${i}`);
-        if (dot) {
-            dot.style.width = i === index ? '24px' : '8px';
-            dot.style.background = i === index ? '#d4af37' : 'rgba(255,255,255,0.5)';
-        }
-    });
-    // Update counter
-    const counter = document.getElementById('galleryCounter');
-    if (counter) counter.textContent = `${index + 1} / ${galleryImages.length}`;
-}
-
-function galleryNextSlide() {
-    galleryCurrentSlide = (galleryCurrentSlide + 1) % galleryImages.length;
-    galleryGoTo(galleryCurrentSlide);
-}
-
-function galleryPrevSlide() {
-    galleryCurrentSlide = (galleryCurrentSlide - 1 + galleryImages.length) % galleryImages.length;
-    galleryGoTo(galleryCurrentSlide);
-}
-
-function galleryNext(e) { if (e) e.stopPropagation(); galleryNextSlide(); }
-function galleryPrev(e) { if (e) e.stopPropagation(); galleryPrevSlide(); }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🔲 LIGHTBOX OPEN
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function openGalleryLightbox(index) {
-    lightboxCurrentIndex = index;
-    const existing = document.getElementById('galleryLightbox');
-    if (existing) existing.remove();
-
-    clearInterval(galleryAutoSlideTimer);
-
-    const lightbox = document.createElement('div');
-    lightbox.id = 'galleryLightbox';
-    lightbox.style.cssText = `
-        position:fixed; top:0; left:0; width:100%; height:100%;
-        background:rgba(0,0,0,0.97); z-index:99999;
-        display:flex; align-items:center; justify-content:center;
-        opacity:0; transition:opacity 0.3s ease; backdrop-filter:blur(15px);
-    `;
-
-    lightbox.innerHTML = `
-        <!-- Close Button - TOP RIGHT -->
-        <button id="lightboxClose" style="
-            position:fixed; top:20px; right:20px;
-            background:rgba(212,175,55,0.2); border:2px solid #d4af37;
-            color:#d4af37; width:55px; height:55px; border-radius:50%;
-            font-size:22px; cursor:pointer; z-index:100001;
-            display:flex; align-items:center; justify-content:center;
-            transition:all 0.3s ease; backdrop-filter:blur(5px);
-        " onmouseover="this.style.background='rgba(212,175,55,0.5)'; this.style.transform='scale(1.1)';"
-           onmouseout="this.style.background='rgba(212,175,55,0.2)'; this.style.transform='scale(1)';">
-            <i class="fas fa-times"></i>
-        </button>
-
-        <!-- Counter - TOP CENTER -->
-        <div id="lightboxCounter" style="
-            position:fixed; top:25px; left:50%; transform:translateX(-50%);
-            color:#fff; font-size:14px; font-weight:600;
-            background:rgba(0,0,0,0.7); padding:8px 20px; border-radius:25px;
-            border:1px solid rgba(212,175,55,0.4); z-index:100001;
-            font-family:'Poppins',sans-serif;
-        ">${index + 1} / ${galleryImages.length}</div>
-
-        <!-- Main Image -->
-        <div style="position:relative; max-width:90vw; max-height:85vh; display:flex; align-items:center; justify-content:center;">
-            <img id="lightboxImage" src="${galleryImages[index].src}" alt="${galleryImages[index].title}" style="
-                max-width:90vw; max-height:80vh; object-fit:contain;
-                border-radius:12px; box-shadow:0 30px 80px rgba(0,0,0,1);
-                transition:opacity 0.3s ease; user-select:none;
-            " onerror="this.src='https://via.placeholder.com/800x500/1a1a1a/d4af37?text=Image'">
-        </div>
-
-        <!-- Caption - ABOVE THUMBS -->
-        <div id="lightboxCaption" style="
-            position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
-            text-align:center; z-index:100001; white-space:nowrap;
-        ">
-            <h3 style="color:#d4af37; font-size:20px; margin:0; font-family:'Poppins',sans-serif; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,1);">
-                ${galleryImages[index].title}
-            </h3>
-            <p style="color:rgba(255,255,255,0.8); font-size:13px; margin:4px 0 0; text-shadow:0 2px 10px rgba(0,0,0,1);">
-                ${galleryImages[index].caption}
-            </p>
-        </div>
-
-        <!-- Prev Button - LEFT MIDDLE -->
-        <button id="lightboxPrev" style="
-            position:fixed; left:15px; top:50%; transform:translateY(-50%);
-            background:rgba(0,0,0,0.8); border:2px solid rgba(212,175,55,0.6);
-            color:#d4af37; width:55px; height:55px; border-radius:50%;
-            font-size:20px; cursor:pointer; z-index:100001;
-            display:flex; align-items:center; justify-content:center;
-            transition:all 0.3s ease;
-        " onmouseover="this.style.background='rgba(212,175,55,0.3)';"
-           onmouseout="this.style.background='rgba(0,0,0,0.8)';">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-
-        <!-- Next Button - RIGHT MIDDLE -->
-        <button id="lightboxNext" style="
-            position:fixed; right:15px; top:50%; transform:translateY(-50%);
-            background:rgba(0,0,0,0.8); border:2px solid rgba(212,175,55,0.6);
-            color:#d4af37; width:55px; height:55px; border-radius:50%;
-            font-size:20px; cursor:pointer; z-index:100001;
-            display:flex; align-items:center; justify-content:center;
-            transition:all 0.3s ease;
-        " onmouseover="this.style.background='rgba(212,175,55,0.3)';"
-           onmouseout="this.style.background='rgba(0,0,0,0.8)';">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-
-        <!-- Thumbnail Strip - BOTTOM -->
-        <div id="lightboxThumbs" style="
-            position:fixed; bottom:15px; left:50%; transform:translateX(-50%);
-            display:flex; gap:8px; z-index:100001; padding:8px 12px;
-            background:rgba(0,0,0,0.8); border-radius:15px;
-            border:1px solid rgba(212,175,55,0.2);
-            max-width:90vw; overflow-x:auto;
-        ">
-            ${galleryImages.map((img, i) => `
-                <img src="${img.src}" alt="${img.title}" data-index="${i}"
-                    onclick="lightboxGoTo(${i})"
-                    style="
-                        width:50px; height:38px; object-fit:cover; border-radius:6px;
-                        cursor:pointer; flex-shrink:0; transition:all 0.3s ease;
-                        border:2px solid ${i === index ? '#d4af37' : 'transparent'};
-                        opacity:${i === index ? '1' : '0.5'};
-                    "
-                    onmouseover="this.style.opacity='0.9'; this.style.borderColor='rgba(212,175,55,0.7)';"
-                    onmouseout="if(lightboxCurrentIndex!==${i}){this.style.opacity='0.5'; this.style.borderColor='transparent';}"
-                    onerror="this.style.display='none'">
-            `).join('')}
-        </div>
-    `;
-
-    document.body.appendChild(lightbox);
-    setTimeout(() => { lightbox.style.opacity = '1'; }, 10);
-
-    // Events
-    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
-    document.getElementById('lightboxPrev').addEventListener('click', (e) => { e.stopPropagation(); lightboxGoTo(lightboxCurrentIndex - 1); });
-    document.getElementById('lightboxNext').addEventListener('click', (e) => { e.stopPropagation(); lightboxGoTo(lightboxCurrentIndex + 1); });
-    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener('keydown', handleLightboxKeyboard);
-
-    // Touch swipe inside lightbox
-    let lbTouchStart = 0;
-    lightbox.addEventListener('touchstart', (e) => { lbTouchStart = e.changedTouches[0].screenX; }, { passive: true });
-    lightbox.addEventListener('touchend', (e) => {
-        const diff = lbTouchStart - e.changedTouches[0].screenX;
-        if (Math.abs(diff) > 50) diff > 0 ? lightboxGoTo(lightboxCurrentIndex + 1) : lightboxGoTo(lightboxCurrentIndex - 1);
-    }, { passive: true });
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🔄 LIGHTBOX NAVIGATE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function lightboxGoTo(index) {
-    if (index < 0) index = galleryImages.length - 1;
-    if (index >= galleryImages.length) index = 0;
-    lightboxCurrentIndex = index;
-    const img = galleryImages[index];
-
-    // Fade image
-    const lbImg = document.getElementById('lightboxImage');
-    if (lbImg) {
-        lbImg.style.opacity = '0';
-        setTimeout(() => { lbImg.src = img.src; lbImg.style.opacity = '1'; }, 200);
+  } else if (page === 'inst-partners') {
+    // ✅ NEW: Dedicated Partnerships page
+    const el = document.getElementById('page-inst-partners');
+    if (el) {
+      el.classList.add('active');
+      setTimeout(() => {
+        initPartnersSection();
+      }, 150);
     }
 
-    // Update caption
-    const caption = document.getElementById('lightboxCaption');
-    if (caption) {
-        caption.innerHTML = `
-            <h3 style="color:#d4af37; font-size:20px; margin:0; font-family:'Poppins',sans-serif; font-weight:700; text-shadow:0 2px 10px rgba(0,0,0,1);">${img.title}</h3>
-            <p style="color:rgba(255,255,255,0.8); font-size:13px; margin:4px 0 0; text-shadow:0 2px 10px rgba(0,0,0,1);">${img.caption}</p>
-        `;
+  } else if (page === 'inst-ev') {
+    const el = document.getElementById('page-inst-ev');
+    if (el) el.classList.add('active');
+
+  } else if (page === 'junior') {
+    document.getElementById('page-junior').classList.add('active');
+    document.getElementById('junior-portal-select').style.display = 'block';
+
+  } else if (page === 'junior-student') {
+    document.getElementById('page-junior-student').classList.add('active');
+    showJrTab('jrhome');
+
+  } else if (page === 'school-inst') {
+    document.getElementById('page-school-inst').classList.add('active');
+    showSchTab('schservices');
+  }
+
+  window.scrollTo(0, 0);
+}
+
+// ✅ NEW: Open Partnerships as a separate page
+function openPartnershipsPage() {
+  navigate('inst-partners');
+}
+
+// ===== TAB SYSTEM =====
+let autoEnrollTimer = null;
+let autoEnrollShown = false;
+
+function triggerAutoEnroll() {
+  if (autoEnrollShown) return;
+  autoEnrollShown = true;
+  const form = document.getElementById('auto-enroll-step-form');
+  const success = document.getElementById('auto-enroll-step-success');
+  if (form) form.classList.remove('hidden');
+  if (success) success.classList.add('hidden');
+  openModal('modal-auto-enroll');
+}
+
+function showTab(tab) {
+  if (tab !== 'home' && autoEnrollTimer) {
+    clearTimeout(autoEnrollTimer);
+  }
+
+  document.querySelectorAll('#page-college-student .tab-content').forEach(t => {
+    t.classList.add('hidden');
+  });
+  document.querySelectorAll('#page-college-student .nav-link').forEach(l => l.classList.remove('active'));
+
+  const target = document.getElementById('tab-' + tab);
+  if (target) target.classList.remove('hidden');
+
+  document.querySelectorAll('#page-college-student .nav-link').forEach(l => {
+    if (l.getAttribute('onclick') && l.getAttribute('onclick').includes("'" + tab + "'")) l.classList.add('active');
+  });
+
+  if (tab === 'home') {
+    if (!autoEnrollShown) {
+      if (autoEnrollTimer) clearTimeout(autoEnrollTimer);
+      autoEnrollTimer = setTimeout(triggerAutoEnroll, 60000);
     }
+    renderHomeCourses();
+    renderPlacementSection();
+    setTimeout(initHeroCarousel, 80);
+    animateStats();
+  }
+  if (tab === 'courses') {
+    currentCourseFilter = 'all';
+    renderCourses();
+  }
+  if (tab === 'resources') renderResources();
+  if (tab === 'games') renderGames();
+  if (tab === 'precourses') {
+    currentPreCourseFilter = 'all';
+    renderPreCourses();
+  }
 
-    // Update counter
-    const counter = document.getElementById('lightboxCounter');
-    if (counter) counter.textContent = `${index + 1} / ${galleryImages.length}`;
-
-    // Update thumbnails
-    document.querySelectorAll('#lightboxThumbs img').forEach((thumb, i) => {
-        if (i === index) {
-            thumb.style.border = '2px solid #d4af37';
-            thumb.style.opacity = '1';
-            thumb.scrollIntoView({ block: 'nearest', inline: 'center' });
-        } else {
-            thumb.style.border = '2px solid transparent';
-            thumb.style.opacity = '0.5';
-        }
-    });
+  window.scrollTo(0, 0);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  ⌨️ KEYBOARD + CLOSE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function handleLightboxKeyboard(e) {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') lightboxGoTo(lightboxCurrentIndex + 1);
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') lightboxGoTo(lightboxCurrentIndex - 1);
-    if (e.key === 'Escape') closeLightbox();
+function showInstTab(tab) {
+  window.scrollTo(0, 0);
 }
 
-function closeLightbox() {
-    const lightbox = document.getElementById('galleryLightbox');
-    if (lightbox) {
-        lightbox.style.opacity = '0';
-        setTimeout(() => lightbox.remove(), 300);
-    }
-    document.removeEventListener('keydown', handleLightboxKeyboard);
-    if (!galleryIsPaused) startGalleryAutoSlide();
+function showJrTab(tab) {
+  document.querySelectorAll('#page-junior-student .jrtab-content').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('#page-junior-student .nav-link').forEach(l => l.classList.remove('active'));
+  const target = document.getElementById('jrtab-' + tab);
+  if (target) target.classList.remove('hidden');
+  document.querySelectorAll('#page-junior-student .nav-link').forEach(l => {
+    if (l.getAttribute('onclick') && l.getAttribute('onclick').includes("'" + tab + "'")) l.classList.add('active');
+  });
+  if (tab === 'jrcourses') renderJrCourses('all');
+  window.scrollTo(0, 0);
 }
 
-// ──────────────────────────────────────────────────────────
-//  🔎 Standalone lightbox for static images (gallery-viewport)
-//  Allows clicking fallback/static images to open a large view
-// ──────────────────────────────────────────────────────────
-function openStandaloneLightbox(src, title = '', caption = '') {
-    const existing = document.getElementById('standaloneLightbox');
-    if (existing) existing.remove();
-
-    const lb = document.createElement('div');
-    lb.id = 'standaloneLightbox';
-    lb.style.cssText = `
-        position:fixed; inset:0; background:rgba(0,0,0,0.95);
-        display:flex; align-items:center; justify-content:center;
-        z-index:100000; padding:24px;
-    `;
-
-    lb.innerHTML = `
-        <button id="standaloneClose" style="
-            position:fixed; top:20px; right:20px; background:rgba(212,175,55,0.2);
-            border:2px solid #d4af37; color:#d4af37; width:55px; height:55px; border-radius:50%;
-            font-size:22px; cursor:pointer; z-index:100001; display:flex; align-items:center; justify-content:center;
-        "><i class="fas fa-times"></i></button>
-
-        <div style="max-width:95vw; max-height:90vh; display:flex; align-items:center; justify-content:center;">
-            <img src="${src}" alt="${title}" style="max-width:95vw; max-height:88vh; object-fit:contain; border-radius:12px; box-shadow:0 30px 80px rgba(0,0,0,1);"/>
-        </div>
-
-        ${title ? `<div style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); color:#fff; z-index:100001; font-weight:600;">${title}${caption ? ` — <span style="opacity:0.85">${caption}</span>` : ''}</div>` : ''}
-    `;
-
-    document.body.appendChild(lb);
-
-    // events
-    document.getElementById('standaloneClose').addEventListener('click', closeStandaloneLightbox);
-    lb.addEventListener('click', (e) => { if (e.target === lb) closeStandaloneLightbox(); });
-
-    function onKey(e) {
-        if (e.key === 'Escape') {
-            closeStandaloneLightbox();
-            document.removeEventListener('keydown', onKey);
-        }
-    }
-    document.addEventListener('keydown', onKey);
+function showSchTab(tab) {
+  document.querySelectorAll('#page-school-inst .schtab-content').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('#page-school-inst .nav-link').forEach(l => l.classList.remove('active'));
+  const target = document.getElementById('schtab-' + tab);
+  if (target) target.classList.remove('hidden');
+  document.querySelectorAll('#page-school-inst .nav-link').forEach(l => {
+    if (l.getAttribute('onclick') && l.getAttribute('onclick').includes("'" + tab + "'")) l.classList.add('active');
+  });
+  window.scrollTo(0, 0);
 }
 
-function closeStandaloneLightbox() {
-    const lb = document.getElementById('standaloneLightbox');
-    if (lb) lb.remove();
+// ===== MOBILE MENU =====
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  if (menu) menu.classList.toggle('hidden');
+}
+function closeMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  if (menu) menu.classList.add('hidden');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🗺️ DESTINATION PAGES
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function openDestinationPage(state) {
-    const data = destinations[state];
-    if (!data) return;
-    const detailPage = document.getElementById("detailPage");
-    const placesGrid = document.getElementById("places-grid");
-    if (!detailPage || !placesGrid) return;
-
-    document.getElementById("detail-title").innerHTML = data.title;
-    document.getElementById("detail-subtitle").innerText = data.subtitle;
-    placesGrid.innerHTML = "";
-    placesGrid.style.cssText = `display:grid; grid-template-columns:repeat(auto-fill,minmax(350px,1fr)); gap:30px; padding:40px 20px; max-width:1400px; margin:0 auto;`;
-
-    Object.entries(data.places).forEach(([city, cityData]) => {
-        const card = document.createElement("div");
-        card.style.cssText = `background:linear-gradient(135deg,rgba(20,20,20,0.95),rgba(10,10,10,0.95)); border:1px solid rgba(212,175,55,0.3); border-radius:25px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:all 0.3s ease;`;
-
-        const img = document.createElement('div');
-        img.style.cssText = `background-image:url('${cityData.image}'); background-size:cover; background-position:center; height:250px; position:relative;`;
-        const imgOverlay = document.createElement('div');
-        imgOverlay.style.cssText = `position:absolute; inset:0; background:linear-gradient(to bottom,transparent,rgba(0,0,0,0.7));`;
-        img.appendChild(imgOverlay);
-
-        const content = document.createElement('div');
-        content.style.padding = '30px';
-        content.innerHTML = `
-            <h3 style="font-family:'Poppins',sans-serif; font-size:24px; font-weight:700; color:#d4af37; margin-bottom:15px;">${city}</h3>
-            <p style="font-size:14px; line-height:1.7; color:#ccc; margin-bottom:20px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">${cityData.description}</p>
-            <div style="display:flex; gap:10px;">
-                <button onclick="showBookingOptions('${state}','${city}')" style="flex:1; background:linear-gradient(135deg,#d4af37,#b8962e); color:#000; border:none; padding:12px 20px; border-radius:25px; font-size:13px; font-weight:700; cursor:pointer; text-transform:uppercase;">
-                    <i class="fas fa-calendar-check"></i> BOOK NOW
-                </button>
-                <button onclick="viewCityDetails('${state}','${city}')" style="flex:1; background:transparent; border:2px solid #d4af37; color:#d4af37; padding:12px 20px; border-radius:25px; font-size:13px; font-weight:700; cursor:pointer; text-transform:uppercase;">
-                    <i class="fas fa-map-marked-alt"></i> VIEW
-                </button>
-            </div>
-            <p style="font-size:12px; color:#666; margin-top:15px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1);">
-                <i class="fas fa-map-marker-alt" style="color:#d4af37; margin-right:6px;"></i>
-                ${cityData.places.length} Places to Visit
-            </p>
-        `;
-
-        card.addEventListener('mouseenter', () => { card.style.transform = 'translateY(-10px)'; card.style.boxShadow = '0 20px 50px rgba(0,0,0,0.8)'; });
-        card.addEventListener('mouseleave', () => { card.style.transform = 'translateY(0)'; card.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)'; });
-
-        card.appendChild(img);
-        card.appendChild(content);
-        placesGrid.appendChild(card);
-    });
-
-    detailPage.style.display = "block";
-    detailPage.classList.add("active");
-    document.body.classList.add("overlay-open");
-    setTimeout(() => { detailPage.style.opacity = "1"; }, 10);
+// ===== INSTITUTION MOBILE MENU =====
+function toggleInstMobileMenu() {
+  const menu = document.getElementById('inst-mobile-menu');
+  if (menu) menu.classList.toggle('hidden');
+}
+function closeInstMobileMenu() {
+  const menu = document.getElementById('inst-mobile-menu');
+  if (menu) menu.classList.add('hidden');
 }
 
-function closeDetailPage() {
-    const detailPage = document.getElementById("detailPage");
-    if (!detailPage) return;
-    const loc = document.getElementById("detail-title");
-    let currentLocation = loc ? loc.textContent.replace(" Destinations", "").trim() : "General Enquiry";
-
-    detailPage.style.opacity = "0";
-    detailPage.classList.remove("active");
-    document.body.classList.remove("overlay-open");
-    setTimeout(() => {
-        detailPage.style.display = "none";
-        showBookingOptions(currentLocation);
-    }, 300);
-}
-
-function viewCityDetails(state, city) {
-    const places = destinations[state]?.places[city]?.places;
-    if (!places) return;
-    const modal = document.createElement("div");
-    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); display:flex; justify-content:center; align-items:center; z-index:10001;`;
-    modal.innerHTML = `
-        <div style="background:rgba(20,20,20,0.98); border:2px solid rgba(212,175,55,0.4); padding:40px; border-radius:25px; max-width:550px; width:90%; max-height:85%; overflow-y:auto;">
-            <h3 style="color:#d4af37; text-align:center; font-size:28px; margin-bottom:20px; font-family:'Poppins',sans-serif;">${city.toUpperCase()}</h3>
-            <ul style="list-style:none; padding:0; color:#fff;">
-                ${places.map((p, i) => `
-                    <li style="margin:10px 0; padding:14px; background:rgba(212,175,55,0.05); border-radius:12px; display:flex; align-items:center;">
-                        <span style="display:inline-flex; width:28px; height:28px; background:#d4af37; border-radius:50%; color:#000; font-weight:700; align-items:center; justify-content:center; margin-right:14px; font-size:12px;">${i+1}</span>
-                        ${p}
-                    </li>
-                `).join('')}
-            </ul>
-            <button onclick="this.closest('div').parentElement.remove()" style="background:#d4af37; color:#000; border:none; padding:14px 50px; margin-top:20px; border-radius:50px; cursor:pointer; font-weight:700; display:block; margin-left:auto; margin-right:auto; font-family:'Poppins',sans-serif; font-size:15px;">
-                <i class="fas fa-times"></i> CLOSE
-            </button>
-        </div>
-    `;
-    document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📝 BOOKING FORM
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function showBookingOptions(state, city = '') {
-    const location = city ? `${city}, ${state}` : state;
-    formData.location = location;
-    hasDataBeenSent = false;
-
-    const modal = document.createElement("div");
-    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); display:flex; justify-content:center; align-items:center; z-index:10002; overflow-y:auto; backdrop-filter:blur(10px);`;
-    modal.id = "bookingModal";
-
-    modal.innerHTML = `
-        <div id="bookingModalContent" style="background:linear-gradient(135deg,rgba(20,20,20,0.95),rgba(5,5,5,0.95)); border:2px solid rgba(212,175,55,0.3); padding:45px; border-radius:25px; max-width:520px; color:#fff; margin:20px; width:90%;">
-            <div style="text-align:center; margin-bottom:25px;">
-                <i class="fas fa-calculator" style="font-size:48px; color:#d4af37;"></i>
-                <h2 style="color:#d4af37; margin:10px 0; font-size:28px; font-family:'Poppins',sans-serif; font-weight:800;">PACKAGE CALCULATOR</h2>
-                <p style="color:#aaa; margin:5px 0; font-size:15px;"><i class="fas fa-map-marker-alt" style="color:#d4af37;"></i> ${location}</p>
-            </div>
-            <form id="bookingCalcForm" style="display:flex; flex-direction:column; gap:18px;">
-                <div>
-                    <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fas fa-user"></i> Full Name *</label>
-                    <input type="text" id="booking-name" placeholder="Enter your name" required style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; font-family:inherit; box-sizing:border-box; font-size:15px;"
-                        onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
-                </div>
-                <div>
-                    <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fab fa-whatsapp"></i> WhatsApp Number *</label>
-                    <input type="tel" id="booking-phone" placeholder="+91 XXXXXXXXXX" required style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; font-family:inherit; box-sizing:border-box; font-size:15px;"
-                        onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
-                    <div>
-                        <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fas fa-users"></i> Persons *</label>
-                        <input type="number" id="booking-persons" min="1" value="1" style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; box-sizing:border-box; font-size:15px;" onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
-                    </div>
-                    <div>
-                        <label style="display:block; margin-bottom:10px; font-size:14px; color:#d4af37; font-weight:600;"><i class="fas fa-calendar-alt"></i> Days *</label>
-                        <input type="number" id="booking-days" min="1" value="3" style="width:100%; padding:14px; border-radius:12px; border:1px solid #333; background:#0c0c0c; color:#fff; outline:none; box-sizing:border-box; font-size:15px;" onfocus="this.style.borderColor='#d4af37';" onblur="this.style.borderColor='#333';">
-                    </div>
-                </div>
-                <button type="submit" id="submitBookingBtn" style="background:linear-gradient(135deg,#d4af37,#b8962e); color:#000; border:none; padding:16px; border-radius:30px; font-weight:700; cursor:pointer; font-size:15px; font-family:'Poppins',sans-serif; text-transform:uppercase; letter-spacing:1px; box-shadow:0 10px 30px rgba(212,175,55,0.4);">
-                    <i class="fab fa-whatsapp"></i>START JOURNEY
-                </button>
-                <button type="button" id="cancelBookingBtn" style="background:transparent; border:1px solid #666; color:#aaa; padding:12px; border-radius:30px; cursor:pointer; font-family:inherit; font-size:14px;">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-            </form>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    document.getElementById("booking-name").addEventListener('input', (e) => { formData.name = e.target.value; });
-    document.getElementById("booking-phone").addEventListener('input', (e) => { formData.phone = e.target.value; });
-    document.getElementById("booking-persons").addEventListener('input', (e) => { formData.persons = e.target.value; });
-    document.getElementById("booking-days").addEventListener('input', (e) => { formData.days = e.target.value; });
-
-    document.getElementById("bookingCalcForm").addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (!formData.name.trim() || !formData.phone.trim()) { showQuickNotification("❌ Please fill Name and Phone!"); return; }
-        const btn = document.getElementById("submitBookingBtn");
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CONTACTING TEAM...';
-        btn.style.opacity = '0.7';
-
-        // big confirmation popup (user requested)
-        showMegaPopup('My team will contact you soon', 1500);
-
-        // wait briefly so user sees the mega popup, then open WhatsApp
-        setTimeout(() => {
-            const opened = sendToWhatsApp();
-            if (opened) {
-                showSuccessNotification("✅ WhatsApp opened!");
-                setTimeout(() => closeBookingModal(), 2000);
-                // restore button label afterwards
-                setTimeout(() => { btn.disabled = false; btn.innerHTML = '<i class="fab fa-whatsapp"></i> VIEW DETAILS'; btn.style.opacity = '1'; }, 1600);
-            } else {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fab fa-whatsapp"></i> VIEW DETAILS';
-                btn.style.opacity = '1';
-            }
-        }, 700);
-    });
-
-    document.getElementById("cancelBookingBtn").addEventListener('click', function() {
-        if (formData.name.trim() || formData.phone.trim()) {
-            const btn = document.getElementById("cancelBookingBtn");
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            if (sendToWhatsApp()) {
-                showSuccessNotification("✅ Message sent!");
-                setTimeout(() => closeBookingModal(), 1500);
-            } else { closeBookingModal(); }
-        } else { closeBookingModal(); }
-    });
-
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            if (formData.name.trim() || formData.phone.trim()) {
-                if (sendToWhatsApp()) {
-                    showSuccessNotification("✅ Message sent!");
-                    setTimeout(() => closeBookingModal(), 1500);
-                } else { closeBookingModal(); }
-            } else { closeBookingModal(); }
-        }
-    });
-
-    document.getElementById("bookingModalContent").addEventListener('click', (e) => e.stopPropagation());
-
-    window.closeBookingModal = () => {
-        const bm = document.getElementById("bookingModal");
-        if (bm) { bm.style.opacity = '0'; setTimeout(() => bm.remove(), 300); }
-    };
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  ✅ NOTIFICATIONS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function showSuccessNotification(message) {
-    const n = document.createElement('div');
-    n.style.cssText = `position:fixed; top:100px; right:30px; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; padding:18px 28px; border-radius:15px; border:2px solid rgba(37,211,102,0.5); z-index:10003; opacity:0; transform:translateX(50px); transition:all 0.4s ease; box-shadow:0 10px 40px rgba(37,211,102,0.4); font-weight:600; font-size:15px; display:flex; align-items:center; gap:12px;`;
-    n.innerHTML = `<i class="fas fa-check-circle" style="font-size:22px;"></i><span>${message}</span>`;
-    document.body.appendChild(n);
-    setTimeout(() => { n.style.opacity='1'; n.style.transform='translateX(0)'; }, 10);
-    setTimeout(() => { n.style.opacity='0'; setTimeout(() => n.remove(), 400); }, 3000);
-}
-
-// Big centered popup used when user submits booking ("my team will contact you soon")
-function showMegaPopup(message, duration = 1500) {
-    const existing = document.getElementById('megaPopup');
-    if (existing) existing.remove();
-    const p = document.createElement('div');
-    p.id = 'megaPopup';
-    p.style.cssText = `position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:100050; pointer-events:none;`;
-    p.innerHTML = `
-        <div style="pointer-events:auto; background:linear-gradient(180deg,#0b0b0b,#111); border:2px solid rgba(212,175,55,0.25); color:#fff; padding:28px 36px; border-radius:18px; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,0.9); max-width:90%;">
-            <div style="font-size:34px; color:#d4af37; margin-bottom:8px;"><i class='fas fa-headset'></i></div>
-            <div style="font-size:20px; font-weight:700; line-height:1.2;">${message}</div>
-        </div>
-    `;
-    document.body.appendChild(p);
-    setTimeout(() => { p.remove(); }, duration);
-} 
-
-function showQuickNotification(message) {
-    const n = document.createElement('div');
-    n.style.cssText = `position:fixed; top:100px; right:30px; background:rgba(0,0,0,0.9); color:#fff; padding:15px 25px; border-radius:10px; border:1px solid #d4af37; z-index:10000; opacity:0; transform:translateX(50px); transition:all 0.3s ease;`;
-    n.textContent = message;
-    document.body.appendChild(n);
-    setTimeout(() => { n.style.opacity='1'; n.style.transform='translateX(0)'; }, 10);
-    setTimeout(() => { n.style.opacity='0'; setTimeout(() => n.remove(), 300); }, 2000);
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📞 OTHER FUNCTIONS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-function quickQuote(p) { showBookingOptions(p); }
-function whatsapp(m) { window.open(`https://wa.me/917558138968?text=${encodeURIComponent("Hi Fundun Holidays, " + m)}`, "_blank"); }
-function openMail() { window.open("https://mail.google.com/mail/?view=cm&fs=1&to=fundunholidays@gmail.com", "_blank"); }
-function scrollToSection(id) { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); }
-function openQuickCalculator() { showBookingOptions('General Enquiry'); }
-function openServiceBooking(s) { showBookingOptions(s); }
-
-// Phone options popup (Call vs WhatsApp)
-function showPhoneOptions() {
-    const existing = document.getElementById('phoneOptionsModal');
-    if (existing) existing.remove();
-
-    const modal = document.createElement('div');
-    modal.id = 'phoneOptionsModal';
-    modal.style.cssText = `position:fixed; inset:0; background:rgba(0,0,0,0.92); display:flex; align-items:center; justify-content:center; z-index:10050; backdrop-filter:blur(10px);`;
-    modal.innerHTML = `
-        <div style="background:linear-gradient(135deg,rgba(20,20,20,0.95),rgba(5,5,5,0.95)); border:2px solid rgba(212,175,55,0.3); padding:40px; border-radius:25px; max-width:450px; width:90%; text-align:center; color:#fff;">
-            <i class="fas fa-phone" style="font-size:48px; color:#d4af37; margin-bottom:15px; display:block;"></i>
-            <h3 style="color:#d4af37; margin:10px 0 25px; font-size:22px; font-family:'Poppins',sans-serif;">CONTACT US</h3>
-            <p style="color:#aaa; margin-bottom:30px;">+91 7010954360</p>
-            
-            <div style="display:flex; gap:14px; justify-content:center;">
-                <button onclick="callPhone('7010954360')" style="flex:1; background:linear-gradient(135deg,#d4af37,#b8962e); color:#000; border:none; padding:14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:14px; text-transform:uppercase;">
-                    <i class="fas fa-phone"></i> CALL
-                </button>
-                <button onclick="whatsappPhone('7010954360')" style="flex:1; background:linear-gradient(135deg,#25d366,#128c7e); color:#fff; border:none; padding:14px; border-radius:20px; font-weight:700; cursor:pointer; font-size:14px; text-transform:uppercase;">
-                    <i class="fab fa-whatsapp"></i> WHATSAPP
-                </button>
-            </div>
-            <button onclick="document.getElementById('phoneOptionsModal').remove()" style="width:100%; margin-top:14px; background:transparent; border:1px solid #666; color:#aaa; padding:10px; border-radius:20px; cursor:pointer; font-family:inherit; font-size:13px;">
-                <i class="fas fa-times"></i> Close
-            </button>
-        </div>
-    `;
-    document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
-}
-
-function callPhone(phone) {
-    window.location.href = `tel:+91${phone}`;
-    document.getElementById('phoneOptionsModal')?.remove();
-}
-
-function whatsappPhone(phone) {
-    window.open(`https://wa.me/91${phone}`, '_blank');
-    document.getElementById('phoneOptionsModal')?.remove();
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  ⭐ REVIEWS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-const heroReviews = [
-    { name: "Arun", stars: 5, text: "Amazing trip planning and great support!" },
-    { name: "Priya", stars: 5, text: "Best travel experience ever." },
-    { name: "Karthik", stars: 4, text: "Very smooth and well-organized tour." },
-    { name: "Meena", stars: 5, text: "Friendly team and excellent service." }
-];
-let reviewIndex = 0;
-
-function renderSingleReview() {
-    const rs = document.getElementById("reviewSlider");
-    if (!rs) return;
-    const r = heroReviews[reviewIndex];
-    rs.innerHTML = `
-        <div class="review-card">
-            <div class="review-header">
-                <div class="review-avatar">${r.name.charAt(0)}</div>
-                <div><div class="review-name">${r.name}</div><div class="review-stars">${"★".repeat(r.stars)}</div></div>
-            </div>
-            <div class="review-text">${r.text}</div>
-        </div>
-    `;
-    reviewIndex = (reviewIndex + 1) % heroReviews.length;
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🔔 LIVE NOTIFICATIONS
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-const bookingNotifications = [
-    { name: "Ram from Pudukkottai", package: "Ooty Honeymoon Package", time: "2 minutes ago" },
-    { name: "Arun & archana ", package: "Kerala Honeymoon Tour", time: "5 minutes ago" },
-    { name: "Arun from Bangalore", package: "Munnar Family Package", time: "8 minutes ago" },
-    { name: "Vaishnavi & suriya", package: "Kodaikanal Couple Package", time: "12 minutes ago" },
-    { name: "Vikram & Family", package: "Goa Beach Holiday", time: "15 minutes ago" },
-    { name: "Meena from Coimbatore", package: "Ramoji Film City Tour", time: "18 minutes ago" },
-    { name: "Suresh & Team", package: "Corporate Coorg Package", time: "22 minutes ago" },
-    { name: "Lakshmi from Hyderabad", package: "Alleppey Backwaters", time: "25 minutes ago" },
-    { name: "Arjun & Sneha", package: "Wayanad Nature Tour", time: "30 minutes ago" },
-    { name: "Harini from Delhi", package: "Mysore Heritage Tour", time: "35 minutes ago" }
-];
-
-let currentNotificationIndex = 0;
-let notificationTimeout = null;
-
-function showLiveNotification() {
-    const notificationDiv = document.getElementById("live-notification");
-    const notifText = document.getElementById("notif-text");
-    if (!notificationDiv || !notifText) return;
-    const n = bookingNotifications[currentNotificationIndex];
-    notifText.innerHTML = `<strong>${n.name}</strong> just viewed <span style="color:#d4af37;">${n.package}</span> <span style="color:#999;">• ${n.time}</span>`;
-    notificationDiv.classList.add("show");
-    if (notificationTimeout) clearTimeout(notificationTimeout);
-    notificationTimeout = setTimeout(() => {
-        notificationDiv.classList.remove("show");
-        currentNotificationIndex = (currentNotificationIndex + 1) % bookingNotifications.length;
-        setTimeout(showLiveNotification, 8000);
-    }, 5000);
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🚀 INIT
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🌴 Fundun Holidays - Script Loaded!");
-
-    // Hero Carousel
-    const heroImages = [
-        'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239861/POSTER_bvgobj.png',
-        'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769595950/hero_image_2_dxwrxu.png',
-        'https://res.cloudinary.com/drlg1t6pk/image/upload/v1769620540/img_post_rbz4dd.png'
-    ];
-    const carouselContainer = document.querySelector('.carousel-container');
-    if (carouselContainer) {
-        heroImages.forEach((img, i) => {
-            const slide = document.createElement('div');
-            slide.classList.add('carousel-slide');
-            if (i === 0) slide.classList.add('active');
-            slide.style.backgroundImage = `url('${img}')`;
-            carouselContainer.appendChild(slide);
-        });
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.carousel-slide');
-        setInterval(() => {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }, 5000);
-    }
-
-    // Mobile Menu
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navLinks = document.querySelector('.nav-links');
-    if (mobileMenu && navLinks) {
-        mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            const icon = mobileMenu.querySelector('i');
-            if (icon) { icon.classList.toggle('fa-bars'); icon.classList.toggle('fa-times'); }
-        });
-        document.querySelectorAll('.nav-links li a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-                const icon = mobileMenu.querySelector('i');
-                if (icon) { icon.classList.add('fa-bars'); icon.classList.remove('fa-times'); }
-            });
-        });
-    }
-
-    // Navbar scroll
-    const navbar = document.getElementById('navbar');
-    if (navbar) {
-        window.addEventListener('scroll', () => { navbar.classList.toggle('fixed', window.scrollY > 50); }, { passive: true });
-    }
-
-    // Destination Filters
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filter = btn.getAttribute('data-filter');
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.state-container').forEach(container => {
-                container.style.display = (filter === 'all' || container.getAttribute('data-category') === filter) ? 'block' : 'none';
-            });
-        });
-    });
-
-    // Gallery
-    buildGallery();
-
-    // Make static gallery images (the .gallery-viewport fallback) clickable — open standalone lightbox
-    document.querySelectorAll('.gallery-viewport .slide img').forEach(img => {
-        img.style.cursor = 'zoom-in';
-        img.addEventListener('click', () => openStandaloneLightbox(img.src, img.alt || 'Gallery Image'));
-    });
-
-    // Reviews
-    renderSingleReview();
-    setInterval(renderSingleReview, 3500);
-
-    // Live Notifications
-    setTimeout(showLiveNotification, 3000);
-
-    console.log("✅ All systems ready!");
-    console.log("✅ Gallery: hover pause + click lightbox ACTIVE!");
-    console.log("✅ WhatsApp: Cancel/Close auto-send ACTIVE!");
-
-    // Exit confirmation — show a confirmation dialog when the user attempts to close/navigate away
-    window.addEventListener('beforeunload', function (e) {
-        const confirmationMessage = 'Are you sure you want to leave this site?';
-        e.preventDefault();
-        e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
-        return confirmationMessage; // Gecko, WebKit, Chrome <34
-    });
-});
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  🖼️ FULL GALLERY SYSTEM
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-const GALLERY_IMAGES = [
-  { id:1,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239844/img29_jeheip.jpg",        title:"Scenic Hills",     place:"Tamil Nadu" },
-  { id:2,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239792/img12_bl8rzq.jpg",      title:"Valley View",      place:"Kerala" },
-  { id:3,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239844/img31_etblj9.jpg",      title:"Nature Trail",     place:"Karnataka" },
-  { id:4,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239846/img5_nfnuos.jpg",      title:"Golden Sunrise",   place:"Ooty" },
-  { id:5,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1770658100/ven_pxvtw3.jpg",      title:"Misty Mountains",  place:"Kodaikanal" },
-  { id:6,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771500855/IMG-20260119-WA0003_ooqgs4.jpg",        title:"Green Estates",    place:"Munnar" },
-  { id:7,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771598718/SAVE_20260220_195925.jpg_ugp7yp.jpg",        title:"Backwater Bliss",  place:"Alleppey" },
-  { id:8,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771598813/SAVE_20260220_195857.jpg_xzyueg.jpg",      title:"Heritage Glow",    place:"Mysore" },
-  { id:9,  src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771598939/SAVE_20260220_200236.jpg_i52v8c.jpg",       title:"Queen of Hills",   place:"Ooty" },
-  { id:10, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599074/SAVE_20260220_195539.jpg_knavss.jpg",     title:"Tea Garden",       place:"Munnar" },
-  { id:11, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599162/SAVE_20260220_195852.jpg_mi2tjj.jpg", title:"Princess Hills",   place:"Kodaikanal" },
-  { id:12, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769497258/party_c0ls8b.jpg",   title:"Venice of East",   place:"Alleppey" },
-  { id:13, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239845/img34_dienml.jpg",   title:"Wild Wayanad",     place:"Wayanad" },
-  { id:14, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239827/img25_ng8p1i.jpg",     title:"Palace City",      place:"Mysore" },
-  { id:15, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239794/img24_vyrnov.jpg",      title:"Coffee Country",   place:"Coorg" },
-  { id:16, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599250/SAVE_20260220_195930.jpg_mknim3.jpg",        title:"Beach Paradise",   place:"Goa" },
-  { id:17, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599444/SAVE_20260220_195821.jpg_zk3tll.jpg", title:"Land's End",    place:"Kanyakumari" },
-  { id:18, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599538/SAVE_20260220_195750.jpg_woa3uw.jpg",    title:"Green Meadows",    place:"Vagamon" },
-  { id:19, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599771/SAVE_20260220_195600.jpg_ochwoz.jpg",   title:"City of Pearls",   place:"Hyderabad" },
-  { id:20, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1769239792/img13_ikxyt0.jpg",      title:"Cinematic World",  place:"Ramoji" },
-  { id:21, src:"https://res.cloudinary.com/drlg1t6pk/image/upload/v1771599888/SAVE_20260220_200201.jpg_pb19hk.jpg",      title:"Cinematic World",  place:"Ramoji" },
-
-];
-
-let currentFilter = 'All';
-let filteredImages = [...GALLERY_IMAGES];
-let currentLbIndex = 0;
-
-// ── Open Full Gallery ──────────────────────────────────────
-function openFullGallery() {
-  const overlay = document.getElementById('full-gallery-overlay');
-  overlay.style.display = 'block';
-  document.body.classList.add('overlay-open');
-  setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-  buildFilterPills();
-  renderGalleryGrid(GALLERY_IMAGES);
-}
-
-// ── Close Full Gallery ─────────────────────────────────────
-function closeFullGallery() {
-  const overlay = document.getElementById('full-gallery-overlay');
-  overlay.style.opacity = '0';
-  document.body.classList.remove('overlay-open');
+// ===== SPLASH =====
+window.addEventListener('load', () => {
   setTimeout(() => {
-    overlay.style.display = 'none';
-    overlay.scrollTop = 0;
-  }, 380);
-}
+    const splash = document.getElementById('splash');
+    if (splash) {
+      splash.classList.add('fade-out');
+      setTimeout(() => splash.remove(), 800);
+    }
+  }, 2500);
+});
 
-// ── Build Filter Pills ─────────────────────────────────────
-function buildFilterPills() {
-  const bar = document.getElementById('gallery-filter-bar');
-  const places = ['All', ...new Set(GALLERY_IMAGES.map(i => i.place))];
-  bar.innerHTML = '';
-  places.forEach(p => {
-    const btn = document.createElement('button');
-    btn.textContent = p;
-    btn.onclick = () => {
-      currentFilter = p;
-      filteredImages = p === 'All' ? [...GALLERY_IMAGES] : GALLERY_IMAGES.filter(i => i.place === p);
-      document.getElementById('gallery-count-display').textContent = filteredImages.length;
-      renderGalleryGrid(filteredImages);
-      bar.querySelectorAll('button').forEach(b => {
-        b.style.background = 'rgba(255,255,255,0.05)';
-        b.style.borderColor = 'rgba(255,255,255,0.1)';
-        b.style.color = '#aaa';
-      });
-      btn.style.background = 'rgba(212,175,55,0.2)';
-      btn.style.borderColor = '#d4af37';
-      btn.style.color = '#d4af37';
-    };
-    btn.style.cssText = `background:${p==='All'?'rgba(212,175,55,0.2)':'rgba(255,255,255,0.05)'};border:1px solid ${p==='All'?'#d4af37':'rgba(255,255,255,0.1)'};color:${p==='All'?'#d4af37':'#aaa'};padding:7px 18px;border-radius:30px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.25s ease;letter-spacing:0.4px;font-family:'Poppins',sans-serif;`;
-    bar.appendChild(btn);
+// ===== STATS ANIMATION =====
+let statsAnimated = false;
+function animateStats() {
+  if (statsAnimated) return;
+  statsAnimated = true;
+  const targets = [
+    { id: 'stat1', end: 50000, suffix: '+' },
+    { id: 'stat2', end: 85, suffix: '%' },
+    { id: 'stat3', end: 200, suffix: '+' },
+    { id: 'stat4', end: 80, suffix: '+' },
+    { id: 'stat5', end: 500, suffix: '+' }
+  ];
+  targets.forEach(({ id, end, suffix }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let start = 0;
+    const duration = 1800;
+    const step = end / (duration / 16);
+    const timer = setInterval(() => {
+      start = Math.min(start + step, end);
+      el.textContent = (start >= 1000 ? Math.round(start / 1000) + 'K' : Math.round(start)) + suffix;
+      if (start >= end) clearInterval(timer);
+    }, 16);
   });
 }
 
-// ── Render Grid ────────────────────────────────────────────
-function renderGalleryGrid(images) {
-  const grid = document.getElementById('full-gallery-grid');
-  grid.innerHTML = '';
-  images.forEach((img, idx) => {
-    const tall = idx % 5 === 0 || idx % 7 === 3;
-    const card = document.createElement('div');
-    card.style.cssText = `border-radius:14px;overflow:hidden;position:relative;background:#111;grid-row:${tall ? 'span 2' : 'span 1'};cursor:pointer;animation:gridItemIn 0.5s ease both;animation-delay:${idx * 0.055}s;`;
+// ===== FREE COURSES DATA =====
+const freeCourses = [
+  { title: 'Web Dev Foundations', emoji: '🌐', desc: 'HTML, CSS & basic JavaScript — build your first webpage. Zero to deployed in 2 weeks.', duration: '2 Weeks', level: 'Beginner', depts: ['free', 'cse', 'it'], isFree: true },
+  { title: 'Python Basics', emoji: '🐍', desc: 'Learn Python syntax, loops, functions, and basic projects. The best first programming language.', duration: '2 Weeks', level: 'Beginner', depts: ['free', 'cse', 'it'], isFree: true },
+  { title: 'Resume Writing 101', emoji: '📄', desc: "Craft an ATS-ready resume from scratch. Understand keywords, formatting, and the do's and don'ts.", duration: '1 Week', level: 'Beginner', depts: ['free', 'cse', 'it', 'ece', 'eee', 'mech'], isFree: true },
+  { title: 'Excel for Beginners', emoji: '📊', desc: 'Master Excel basics — formulas, charts, pivot tables. Essential for any career path.', duration: '1 Week', level: 'Beginner', depts: ['free', 'cse', 'it', 'mech', 'eee'], isFree: true },
+];
 
-    card.innerHTML = `
-      <img src="${img.src}" alt="${img.title}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s ease;" onerror="this.src='https://via.placeholder.com/400x300/111/d4af37?text=${encodeURIComponent(img.title)}'">
-      <div class="gcard-overlay" style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,transparent 55%);opacity:0;transition:opacity 0.35s ease;display:flex;align-items:flex-end;">
-        <div style="padding:14px;">
-          <div style="font-size:10px;color:#d4af37;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;">📍 ${img.place}</div>
-          <div style="font-size:14px;color:#fff;font-weight:700;margin-bottom:6px;">${img.title}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.6);">🔍 Click to enlarge</div>
+// ===== MAIN COURSES DATA =====
+const mainCourses = [
+  { title: 'Web Development', depts: ['cse', 'it'], emoji: '🌐', desc: 'Full-stack mastery using modern frameworks.', duration: '12 Weeks', level: 'Intermediate' },
+  { title: 'Cyber Security', depts: ['cse', 'it'], emoji: '🛡️', desc: 'Ethical hacking and network defense strategies.', duration: '10 Weeks', level: 'Advanced' },
+  { title: 'UI & UX', depts: ['cse', 'it'], emoji: '🎨', desc: 'User-centric design and prototyping with Figma.', duration: '8 Weeks', level: 'Beginner' },
+  { title: 'Networking & CCNA', depts: ['cse', 'it', 'ece'], emoji: '🔌', desc: 'Cisco certified network associate training.', duration: '10 Weeks', level: 'Intermediate' },
+  { title: 'IoT', depts: ['cse', 'it'], emoji: '📡', desc: 'Connecting the physical world with smart devices.', duration: '12 Weeks', level: 'Intermediate' },
+  { title: 'Deep Learning & Gen AI', depts: ['cse', 'it'], emoji: '🤖', desc: 'Neural networks and Large Language Models.', duration: '14 Weeks', level: 'Advanced' },
+  { title: 'Data Analytics & Science', depts: ['cse', 'it'], emoji: '📊', desc: 'Statistical modeling and big data insights.', duration: '16 Weeks', level: 'Advanced' },
+  { title: 'Cloud Computing', depts: ['cse', 'it'], emoji: '☁️', desc: 'AWS/Azure infrastructure and deployment.', duration: '10 Weeks', level: 'Intermediate' },
+  { title: 'AI & ML', depts: ['cse', 'it'], emoji: '🧠', desc: 'Foundational machine learning algorithms.', duration: '12 Weeks', level: 'Intermediate' },
+  { title: 'Antenna Design', depts: ['ece'], emoji: '📡', desc: 'RF engineering and electromagnetic simulation.', duration: '10 Weeks', level: 'Advanced' },
+  { title: 'Embedded Systems', depts: ['ece'], emoji: '📟', desc: 'Microcontroller programming and architecture.', duration: '12 Weeks', level: 'Intermediate' },
+  { title: 'PCB Design & Fab', depts: ['ece'], emoji: '📐', desc: 'Hardware design and manufacturing processes.', duration: '8 Weeks', level: 'Beginner' },
+  { title: 'Robotics', depts: ['ece', 'mech'], emoji: '🤖', desc: 'Mechatronics and automated system design.', duration: '14 Weeks', level: 'Intermediate' },
+  { title: 'IoT & Energy Monitoring', depts: ['eee'], emoji: '🔋', desc: 'Smart metering and grid power management.', duration: '10 Weeks', level: 'Intermediate' },
+  { title: 'BMS', depts: ['eee'], emoji: '🏢', desc: 'Building Management Systems & Automation.', duration: '8 Weeks', level: 'Beginner' },
+  { title: 'Electrical Safety', depts: ['eee'], emoji: '⚠️', desc: 'Compliance and safety standards for industry.', duration: '6 Weeks', level: 'Beginner' },
+  { title: 'EV Technology', depts: ['eee', 'mech'], emoji: '⚡', desc: 'Electric vehicle powertrain and battery tech.', duration: '12 Weeks', level: 'Advanced' },
+  { title: 'Industrial Automation', depts: ['eee', 'mech'], emoji: '🏭', desc: 'PLC, SCADA, and manufacturing workflows.', duration: '10 Weeks', level: 'Advanced' },
+  { title: 'Power Electronics', depts: ['eee'], emoji: '⚡', desc: 'Power conversion and semiconductor devices.', duration: '12 Weeks', level: 'Advanced' },
+  { title: 'Smart Grid Tech', depts: ['eee'], emoji: '🌐', desc: 'Modern power distribution and networking.', duration: '10 Weeks', level: 'Intermediate' },
+  { title: '3D Printing', depts: ['mech'], emoji: '🖨️', desc: 'Additive manufacturing and rapid prototyping.', duration: '8 Weeks', level: 'Beginner' },
+  { title: 'CAD, CAM, CAE', depts: ['mech'], emoji: '📐', desc: 'Computer-aided design and engineering analysis.', duration: '16 Weeks', level: 'Intermediate' },
+  { title: 'CNC Programming', depts: ['mech'], emoji: '⚙️', desc: 'Precision manufacturing and toolpathing.', duration: '10 Weeks', level: 'Intermediate' },
+  { title: 'EV Design & Dynamics', depts: ['mech'], emoji: '🏎️', desc: 'Vehicle dynamics and structural chassis design.', duration: '14 Weeks', level: 'Advanced' },
+];
+
+// ===== BUNDLE COURSES DATA =====
+const bundleCourses = [
+  { title: 'Full Stack Developer Bundle', emoji: '🚀', courses: ['Web Development', 'Cloud Computing', 'UI & UX', 'Cyber Security'], desc: 'End-to-end web development — from design to deployment. Perfect for CSE/IT students targeting product companies.', duration: '40 Weeks', level: 'Intermediate', originalPrice: '₹24,000', bundlePrice: '₹14,999', depts: ['bundle', 'cse', 'it'], isFree: false, isBundle: true },
+  { title: 'Data Analyst Pro Bundle', emoji: '📊', courses: ['Data Analytics & Science', 'AI & ML', 'Deep Learning & Gen AI'], desc: 'Complete data career path from analytics to AI. Ideal for students targeting analytics, fintech, and product roles.', duration: '32 Weeks', level: 'Advanced', originalPrice: '₹18,000', bundlePrice: '₹10,999', depts: ['bundle', 'cse', 'it'], isFree: false, isBundle: true },
+  { title: 'EV & Automation Bundle', emoji: '⚡', courses: ['EV Technology', 'Industrial Automation', 'CAD, CAM, CAE'], desc: 'Future-ready mechanical & EEE bundle for students targeting EV, manufacturing, and automation industries.', duration: '32 Weeks', level: 'Advanced', originalPrice: '₹16,000', bundlePrice: '₹9,999', depts: ['bundle', 'mech', 'eee'], isFree: false, isBundle: true },
+  { title: 'Cyber & Network Security Bundle', emoji: '🛡️', courses: ['Cyber Security', 'Networking & CCNA', 'Cloud Computing', 'IoT'], desc: 'Comprehensive security and infrastructure bundle. Perfect for students eyeing cybersecurity and networking roles.', duration: '38 Weeks', level: 'Advanced', originalPrice: '₹20,000', bundlePrice: '₹12,999', depts: ['bundle', 'cse', 'it', 'ece'], isFree: false, isBundle: true },
+  { title: 'Embedded & Hardware Bundle', emoji: '📟', courses: ['Embedded Systems', 'PCB Design & Fab', 'IoT', 'Robotics'], desc: 'Complete hardware stack for ECE students. Covers embedded, PCB, IoT, and robotics from beginner to job-ready.', duration: '44 Weeks', level: 'Intermediate', originalPrice: '₹22,000', bundlePrice: '₹13,999', depts: ['bundle', 'ece'], isFree: false, isBundle: true },
+  { title: 'Smart Power Systems Bundle', emoji: '🔋', courses: ['Power Electronics', 'Smart Grid Tech', 'IoT & Energy Monitoring', 'EV Technology'], desc: 'Future-ready EEE bundle targeting smart grid, power electronics, and sustainable energy industries.', duration: '40 Weeks', level: 'Advanced', originalPrice: '₹20,000', bundlePrice: '₹12,499', depts: ['bundle', 'eee'], isFree: false, isBundle: true },
+];
+
+const courses = [...freeCourses, ...mainCourses, ...bundleCourses];
+
+// ===== COURSE FILTER & RENDER =====
+let currentCourseFilter = 'all';
+
+function filterCourses(dept, btn) {
+  currentCourseFilter = dept;
+  document.querySelectorAll('.dept-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderCourses();
+}
+
+function renderCourses() {
+  const el = document.getElementById('all-courses');
+  if (!el) return;
+
+  let filtered = courses;
+  if (currentCourseFilter === 'bundle') {
+    filtered = courses.filter(c => c.depts && c.depts.includes('bundle'));
+  } else if (currentCourseFilter === 'free') {
+    filtered = courses.filter(c => c.isFree);
+  } else if (currentCourseFilter !== 'all') {
+    filtered = courses.filter(c => c.depts && c.depts.includes(currentCourseFilter) && !c.isFree && !c.isBundle);
+  }
+
+  el.innerHTML = filtered.map(c => {
+    const bgStyle = c.isFree
+      ? 'background:linear-gradient(135deg,#1a2420,var(--green))'
+      : c.isBundle
+        ? 'background:linear-gradient(135deg,#0a1628,#004d36)'
+        : 'background:linear-gradient(135deg,var(--green),#00c98c)';
+
+    const badge = c.isFree
+      ? '<span class="free-badge">🆓 FREE</span>'
+      : c.isBundle
+        ? '<span class="dept-tag">📦 Bundle</span>'
+        : '';
+
+    const priceRow = c.isBundle
+      ? `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+           <span style="font-size:13px;text-decoration:line-through;color:var(--grey-light)">${c.originalPrice}</span>
+           <span style="font-size:16px;font-weight:900;color:var(--green)">${c.bundlePrice}</span>
+         </div>
+         <div style="font-size:11px;color:var(--grey-mid);margin-bottom:6px">Includes: ${c.courses ? c.courses.join(' · ') : ''}</div>`
+      : '';
+
+    const btnLabel = c.isFree ? '🎓 Enroll Free →' : c.isBundle ? '📦 Get Bundle →' : 'Enroll Now →';
+    const btnClass = c.isFree ? 'btn btn-outline' : 'btn btn-primary';
+    const btnAction = c.isFree
+      ? `showToast('🎓 Enrolling in ${c.title.replace(/'/g, '')} — Free!','success')`
+      : `openEnrollModal('${c.title.replace(/'/g, '')}')`;
+
+    return `
+      <div class="course-card">
+        <div class="course-card-img" style="${bgStyle}">
+          <span>${c.emoji}</span>
+          ${badge}
+        </div>
+        <div class="course-card-body">
+          <h3>${c.title}</h3>
+          ${priceRow}
+          <p>${c.desc}</p>
+          <div class="course-meta">
+            <span class="duration">⏱ ${c.duration}</span>
+            <span class="course-level level-${(c.level || 'beginner').toLowerCase()}">${c.level}</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:16px;">
+            <button class="btn btn-outline" style="flex:1; justify-content:center; font-size:13px; padding: 10px 0;" onclick="openSyllabusModal('${c.title.replace(/'/g, "\\'")}', ${c.isFree})">Syllabus</button>
+            <button class="${btnClass}" style="flex:1; justify-content:center; font-size:13px; padding: 10px 0;" onclick="${btnAction}">${btnLabel}</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderHomeCourses() {
+  const home = document.getElementById('home-courses');
+  if (!home || home.children.length > 0) return;
+  const featured = [
+    ...courses.filter(c => c.isFree).slice(0, 1),
+    ...courses.filter(c => !c.isFree && !c.isBundle).slice(0, 2),
+  ];
+  home.innerHTML = featured.map(c => `
+    <div class="course-card">
+      <div class="course-card-img" style="${c.isFree ? 'background:linear-gradient(135deg,#1a2420,var(--green))' : 'background:linear-gradient(135deg,var(--green),#00c98c)'}">
+        <span>${c.emoji}</span>
+        ${c.isFree ? '<span class="free-badge">🆓 FREE</span>' : ''}
+      </div>
+      <div class="course-card-body">
+        <h3>${c.title}</h3>
+        <p>${c.desc}</p>
+        <div class="course-meta">
+          <span class="duration">⏱ ${c.duration}</span>
+          <span class="course-level level-${(c.level || 'beginner').toLowerCase()}">${c.level}</span>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <button class="btn btn-outline" style="flex:1; justify-content:center; font-size:13px; padding: 10px 0;"
+            onclick="openSyllabusModal('${c.title.replace(/'/g, "\\'")}', ${c.isFree})">
+            Syllabus
+          </button>
+          <button class="${c.isFree ? 'btn btn-outline' : 'btn btn-primary'}" style="flex:1; justify-content:center; font-size:13px; padding: 10px 0;"
+            onclick="${c.isFree ? `showToast('🎓 Enrolled free!','success')` : `openEnrollModal('${c.title.replace(/'/g, "\\'")}')`}">
+            ${c.isFree ? '🎓 Enroll Free →' : 'Enroll Now →'}
+          </button>
         </div>
       </div>
-      <div style="position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);border:1px solid rgba(212,175,55,0.4);color:#d4af37;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;backdrop-filter:blur(6px);">${idx + 1}</div>
+    </div>`).join('');
+}
+
+// ===== SYLLABUS MODAL =====
+let currentSyllabusCourse = '';
+let currentSyllabusIsFree = false;
+
+function openSyllabusModal(courseName, isFree) {
+  currentSyllabusCourse = courseName;
+  currentSyllabusIsFree = isFree;
+  const modal = document.getElementById('modal-syllabus');
+  const title = document.getElementById('syllabus-title');
+  const content = document.getElementById('syllabus-roadmap-inject');
+
+  if (title) title.textContent = courseName;
+
+  let roadmapHTML = '<div class="program-timeline">';
+  for (let i = 1; i <= 6; i++) {
+    roadmapHTML += `
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <h4>Module ${i}: ${['Fundamentals', 'Core Concepts', 'Advanced Techniques', 'Real-world Application', 'Project Work', 'Final Assessment'][i - 1]}</h4>
+        <p style="color:var(--grey-mid); font-size:14px; margin-top:6px; line-height: 1.6;">Detailed breakdown of everything covered in this section. Includes hands-on exercises, quizzes, and practical assignments to build your skills step-by-step.</p>
+      </div>
     `;
+  }
+  roadmapHTML += '</div>';
+  roadmapHTML += '<div style="height: 120px; display:flex; align-items:center; justify-content:center; color:var(--grey-light); font-size:12px;">End of Syllabus</div>';
 
-    // Hover effects
-    card.addEventListener('mouseenter', () => {
-      card.querySelector('img').style.transform = 'scale(1.08)';
-      card.querySelector('.gcard-overlay').style.opacity = '1';
-    });
-    card.addEventListener('mouseleave', () => {
-      card.querySelector('img').style.transform = 'scale(1)';
-      card.querySelector('.gcard-overlay').style.opacity = '0';
-    });
+  if (content) content.innerHTML = roadmapHTML;
 
-    card.addEventListener('click', () => openLightboxAt(idx));
-    grid.appendChild(card);
-  });
+  const scrollArea = document.getElementById('syllabus-content');
+  if (scrollArea) {
+    scrollArea.scrollTop = 0;
+    scrollArea.dataset.autoTriggered = '';
+  }
+
+  if (modal) modal.classList.remove('hidden');
 }
 
-// ── Lightbox Open ──────────────────────────────────────────
-function openLightboxAt(index) {
-  currentLbIndex = index;
-  const lb = document.getElementById('gallery-lightbox');
-  lb.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  updateLightbox();
-
-  // Build thumbnails once
-  const thumbs = document.getElementById('lb-thumbs');
-  thumbs.innerHTML = '';
-  filteredImages.forEach((img, i) => {
-    const t = document.createElement('img');
-    t.src = img.src;
-    t.alt = img.title;
-    t.style.cssText = `width:48px;height:36px;object-fit:cover;border-radius:7px;cursor:pointer;flex-shrink:0;transition:all 0.25s ease;border:2px solid ${i === index ? '#d4af37' : 'transparent'};opacity:${i === index ? '1' : '0.5'};`;
-    t.onclick = () => { currentLbIndex = i; updateLightbox(); };
-    thumbs.appendChild(t);
-  });
-}
-
-// ── Update Lightbox ────────────────────────────────────────
-function updateLightbox() {
-  const img = filteredImages[currentLbIndex];
-  const mainImg = document.getElementById('lb-main-img');
-  mainImg.style.opacity = '0';
-  setTimeout(() => {
-    mainImg.src = img.src;
-    mainImg.onload = () => { mainImg.style.opacity = '1'; };
-  }, 150);
-
-  document.getElementById('lb-counter').innerHTML = `<span style="font-size:18px;font-weight:900;color:#d4af37;">${currentLbIndex + 1}</span><span style="font-size:13px;color:#555;margin:0 4px;">/</span><span style="font-size:13px;color:#777;">${filteredImages.length}</span>`;
-
-  document.getElementById('lb-caption').innerHTML = `<span style="font-size:15px;font-weight:700;color:#fff;">${img.title}</span><span style="font-size:12px;color:#d4af37;font-weight:600;">📍 ${img.place}</span>`;
-
-  // Update thumb highlights
-  const thumbs = document.getElementById('lb-thumbs');
-  if (thumbs) {
-    thumbs.querySelectorAll('img').forEach((t, i) => {
-      t.style.border = i === currentLbIndex ? '2px solid #d4af37' : '2px solid transparent';
-      t.style.opacity = i === currentLbIndex ? '1' : '0.5';
-    });
-    thumbs.querySelectorAll('img')[currentLbIndex]?.scrollIntoView({ block: 'nearest', inline: 'center' });
+function checkSyllabusScroll(el) {
+  if (!el) return;
+  const scrollPercentage = el.scrollTop / (el.scrollHeight - el.clientHeight);
+  if (scrollPercentage > 0.5) {
+    if (!el.dataset.autoTriggered) {
+      el.dataset.autoTriggered = 'true';
+      setTimeout(() => { triggerSyllabusEnroll(); }, 400);
+    }
   }
 }
 
-// ── Lightbox Navigate ──────────────────────────────────────
-function lbNav(dir) {
-  currentLbIndex = (currentLbIndex + dir + filteredImages.length) % filteredImages.length;
-  updateLightbox();
+function triggerSyllabusEnroll() {
+  closeModal('modal-syllabus');
+  if (currentSyllabusIsFree) {
+    showToast('🎓 Enrolling in ' + currentSyllabusCourse + ' — Free!', 'success');
+  } else {
+    openEnrollModal(currentSyllabusCourse);
+  }
 }
 
-// ── Close Lightbox ─────────────────────────────────────────
-function closeLightboxGallery() {
-  document.getElementById('gallery-lightbox').style.display = 'none';
-  document.body.style.overflow = '';
+// ===== RESOURCES =====
+const resources = [
+  { icon: '📄', title: 'Ultimate Resume Templates Pack', desc: '12 ATS-optimized resume templates for different industries and experience levels', type: 'PDF', size: '2.4 MB' },
+  { icon: '💡', title: 'Interview Questions Bank – 2024', desc: '500+ interview questions with model answers for technical and HR rounds', type: 'PDF', size: '4.1 MB' },
+  { icon: '🔢', title: 'Aptitude Mastery Workbook', desc: 'Quantitative, logical reasoning and verbal ability practice with solutions', type: 'PDF', size: '3.8 MB' },
+  { icon: '💼', title: 'LinkedIn Profile Optimization Guide', desc: 'Step-by-step guide to create a recruiter-magnetic LinkedIn profile', type: 'PDF', size: '1.2 MB' },
+  { icon: '🗣️', title: 'GD Topics with Analysis – 2024', desc: '100 current affairs GD topics with key points and structuring framework', type: 'PDF', size: '2.1 MB' },
+  { icon: '📊', title: 'Excel for Working Professionals', desc: '100 formulas, pivot tables, dashboards and data visualization with practice files', type: 'PDF', size: '5.3 MB' },
+  { icon: '🤖', title: 'AI Tools for Career Growth', desc: 'How to use ChatGPT, Canva AI, Copilot and more to stand out in your job search', type: 'PDF', size: '1.8 MB' },
+  { icon: '📧', title: 'Professional Email Templates', desc: '50 ready-to-use email templates for job applications, follow-ups and networking', type: 'PDF', size: '0.8 MB' },
+];
+
+function renderResources() {
+  const el = document.getElementById('resources-list');
+  if (!el || el.children.length > 0) return;
+  el.innerHTML = resources.map(r => `
+    <div class="resource-card">
+      <div class="resource-icon">${r.icon}</div>
+      <div class="resource-info"><h4>${r.title}</h4><p>${r.desc}</p></div>
+      <div class="resource-meta">
+        <span class="pdf-badge">${r.type} · ${r.size}</span>
+        <button class="btn btn-outline" style="padding:8px 16px;font-size:13px" onclick="showToast('📥 Downloading: ${r.title.split(' ').slice(0, 3).join(' ')}...','success')">Download</button>
+      </div>
+    </div>`).join('');
 }
 
-// ── Keyboard Support ───────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-  const lb = document.getElementById('gallery-lightbox');
-  if (lb && lb.style.display === 'flex') {
-    if (e.key === 'ArrowRight') lbNav(1);
-    if (e.key === 'ArrowLeft')  lbNav(-1);
-    if (e.key === 'Escape')     closeLightboxGallery();
+// ===== PRE-RECORDED COURSES =====
+const preCoursesData = [...freeCourses, ...mainCourses];
+let currentPreCourseFilter = 'all';
+
+function filterPreCourses(dept, btn) {
+  currentPreCourseFilter = dept;
+  document.querySelectorAll('#precourse-dept-filter .dept-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderPreCourses();
+}
+
+function renderPreCourses() {
+  const el = document.getElementById('all-precourses');
+  if (!el) return;
+
+  let filtered = preCoursesData;
+  if (currentPreCourseFilter === 'free') {
+    filtered = preCoursesData.filter(c => c.isFree);
+  } else if (currentPreCourseFilter !== 'all') {
+    filtered = preCoursesData.filter(c => c.depts && c.depts.includes(currentPreCourseFilter));
+  }
+
+  el.innerHTML = filtered.map(c => {
+    const badge = c.isFree ? '<span class="free-badge">🆓 FREE</span>' : '';
+    const safeTitle = c.title ? c.title.replace(/'/g, "\\'") : '';
+
+    return `
+      <div class="course-card">
+        <div class="course-card-video" style="position:relative; width:100%; height:180px; background:#000; border-radius: var(--radius) var(--radius) 0 0; overflow:hidden;">
+          <video controls preload="none"
+            style="width: 100%; height: 100%; object-fit: cover; outline: none;"
+            onended="openEnrollModal('${safeTitle}')"
+            controlsList="nodownload">
+            <source src="CLOUDINARY_VIDEO_LINK" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          ${c.isFree ? '<div style="position:absolute; top:12px; right:12px; z-index:2; pointer-events:none;">' + badge + '</div>' : ''}
+          <div style="position:absolute; top:12px; left:12px; z-index:2; font-size:24px; pointer-events:none;">${c.emoji || ''}</div>
+        </div>
+        <div class="course-card-body">
+          <h3>${c.title}</h3>
+          <p>${c.desc}</p>
+          <div class="course-meta">
+            <span class="duration">⏱ ${c.duration}</span>
+            <span class="course-level level-${(c.level || 'beginner').toLowerCase()}">${c.level}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ===== GAMES =====
+const games = [
+  { icon: '🎯', title: 'Career Quiz Blitz', hook: 'Play to Get OFF Price', desc: 'Test your knowledge of career terms, industries and workplace scenarios in this fast-paced quiz.', badge: 'Knowledge', action: "openModal('modal-quiz')" },
+  { icon: '🏆', title: 'Mock Interview', desc: 'Kick Out the Fear. Practice answering tough interview questions with our chat-style interviewer.', badge: 'Practice', action: "openModal('modal-interview')" },
+  { icon: '⚡', title: 'Aptitude Speed Challenge', desc: 'Solve quantitative reasoning problems against the clock. Track your speed and accuracy.', badge: 'Math & Logic', action: "openModal('modal-aptitude')" },
+];
+
+function renderGames() {
+  const el = document.getElementById('games-list');
+  if (!el || el.children.length > 0) return;
+  el.innerHTML = games.map(g => `
+    <div class="game-card">
+      <div class="game-card-img" style="background:linear-gradient(135deg,rgba(0,177,123,0.12),var(--milk-dark))">${g.icon}</div>
+      <div class="game-card-body">
+        <div class="game-badge">🎮 ${g.badge}</div>
+        <h3 style="margin-bottom: ${g.hook ? '4px' : '8px'}">${g.title}</h3>
+        ${g.hook ? `<div style="font-size:12px; font-weight:700; color:var(--green); margin-bottom:8px; animation: pulse 2s infinite;">🔥 ${g.hook}</div>` : ''}
+        <p>${g.desc}</p>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:13px" onclick="${g.action}">Play Now →</button>
+      </div>
+    </div>`).join('');
+}
+
+// ===== PLACEMENT SECTION =====
+const placementStudents = [
+  { name: 'Priya Ramesh', initials: 'PR', dept: 'B.Tech CSE, 2024', linkedin: 'https://linkedin.com/in/priyaramesh', photo: '', before: 'Struggling to get interview calls with a generic resume. No idea about ATS systems.', after: 'Placed at TCS as Software Developer with ₹7.5 LPA after MSEED ATS training.', company: 'TCS', salary: '7.5 LPA' },
+  { name: 'Arjun Suresh', initials: 'AS', dept: 'B.E. ECE, 2024', linkedin: 'https://linkedin.com/in/arjunsuresh', photo: '', before: 'No internship experience. Weak in aptitude. Failed 3 placement drives.', after: 'Cleared Infosys and Wipro drives. Joined Infosys as Systems Engineer – ₹6.5 LPA.', company: 'Infosys', salary: '6.5 LPA' },
+  { name: 'Sneha Krishnan', initials: 'SK', dept: 'MBA Finance, 2024', linkedin: 'https://linkedin.com/in/snehakrishnan', photo: '', before: 'No LinkedIn presence. Resume had zero keywords. Rejected in HR rounds.', after: 'Optimized profile with MSEED. Now at HDFC Bank as Relationship Manager – ₹8 LPA.', company: 'HDFC Bank', salary: '8 LPA' },
+  { name: 'Karthik Selvam', initials: 'KS', dept: 'B.Tech Mech, 2023', linkedin: 'https://linkedin.com/in/karthikselvam', photo: '', before: 'Only knew core subjects. No idea about industry tools like CAD/CAM for jobs.', after: 'Completed EV + CAD bundle. Placed at Ola Electric as Design Engineer – ₹9.2 LPA.', company: 'Ola Electric', salary: '9.2 LPA' },
+  { name: 'Divya Nair', initials: 'DN', dept: 'B.Sc Computer Science, 2024', linkedin: 'https://linkedin.com/in/divyanair', photo: '', before: 'From arts background. No technical skills. Felt lost about IT career path.', after: 'Completed Web Dev + Cloud bundle. Now at Freshworks as Associate Developer – ₹7 LPA.', company: 'Freshworks', salary: '7 LPA' },
+  { name: 'Rahul Murugan', initials: 'RM', dept: 'B.E. EEE, 2024', linkedin: 'https://linkedin.com/in/rahulmurugan', photo: '', before: 'Low CGPA (6.1). No certifications. Thought placement was impossible.', after: 'MSEED skill training gave him the edge. Placed at Zoho Corp – ₹10.5 LPA.', company: 'Zoho', salary: '10.5 LPA' },
+];
+
+function renderPlacementSection() {
+  const el = document.getElementById('placement-grid');
+  if (!el || el.children.length > 0) return;
+  el.innerHTML = placementStudents.map(s => `
+    <div class="placement-card">
+      <div class="pc-header">
+        <div class="pc-avatar">
+          ${s.photo ? `<img src="${s.photo}" alt="${s.name}">` : s.initials}
+        </div>
+        <div class="pc-info">
+          <div class="pc-name">
+            ${s.name}
+            <a href="${s.linkedin}" target="_blank" rel="noopener" class="pc-linkedin">in</a>
+          </div>
+          <div class="pc-dept">${s.dept}</div>
+        </div>
+      </div>
+      <div class="pc-story">
+        <div class="pc-before"><span class="pc-label">Before</span><span>${s.before}</span></div>
+        <div class="pc-arrow-row">↓</div>
+        <div class="pc-after"><span class="pc-label">After</span><span>${s.after}</span></div>
+      </div>
+      <div class="pc-footer">
+        <div class="pc-logos">
+          <span class="pc-mseed-badge">MSEED</span>
+          <span class="pc-company-logo">${s.company}</span>
+        </div>
+        <div>
+          <div class="pc-salary-num">${s.salary}</div>
+          <div class="pc-salary-label">Package</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ===== HERO CAROUSEL =====
+let hcCurrent = 0;
+const HC_TOTAL = 3;
+const HC_INTERVAL = 5000;
+let hcTimer = null;
+let hcProgressInterval = null;
+let hcProgress = 0;
+
+function hcGoTo(index) {
+  hcCurrent = ((index % HC_TOTAL) + HC_TOTAL) % HC_TOTAL;
+  const track = document.getElementById('hc-track');
+  if (track) track.style.transform = `translateX(-${hcCurrent * 100}%)`;
+  resetHcProgress();
+}
+
+function hcNext() { hcGoTo(hcCurrent + 1); }
+
+function resetHcProgress() {
+  clearInterval(hcProgressInterval);
+  hcProgress = 0;
+  const fill = document.getElementById('hc-progress');
+  if (fill) fill.style.width = '0%';
+  hcProgressInterval = setInterval(() => {
+    hcProgress += 100 / (HC_INTERVAL / 100);
+    if (fill) fill.style.width = Math.min(hcProgress, 100) + '%';
+    if (hcProgress >= 100) clearInterval(hcProgressInterval);
+  }, 100);
+}
+
+function startHcAuto() {
+  clearInterval(hcTimer);
+  hcTimer = setInterval(hcNext, HC_INTERVAL);
+}
+
+function initHeroCarousel() {
+  clearInterval(hcTimer);
+  clearInterval(hcProgressInterval);
+  hcCurrent = 0;
+
+  const track = document.getElementById('hc-track');
+  if (!track) return;
+  track.style.transform = 'translateX(0%)';
+
+  resetHcProgress();
+  startHcAuto();
+
+  const wrap = document.querySelector('.hero-carousel-wrap');
+  if (wrap && !wrap.dataset.swipeReady) {
+    wrap.dataset.swipeReady = '1';
+    let touchStartX = 0;
+    wrap.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    wrap.addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) hcNext();
+    });
+  }
+}
+
+// ===== ATS CHECKER =====
+function setATSMode(mode) {
+  const checker = document.getElementById('ats-checker');
+  const builder = document.getElementById('ats-builder');
+  const tabChecker = document.getElementById('ats-tab-checker');
+  const tabBuilder = document.getElementById('ats-tab-builder');
+  if (checker) checker.style.display = mode === 'checker' ? 'block' : 'none';
+  if (builder) builder.style.display = mode === 'builder' ? 'block' : 'none';
+  if (tabChecker) tabChecker.className = mode === 'checker' ? 'btn btn-primary' : 'btn btn-outline';
+  if (tabBuilder) tabBuilder.className = mode === 'builder' ? 'btn btn-primary' : 'btn btn-outline';
+}
+
+function simulateUpload() {
+  const uploadSection = document.getElementById('ats-upload-section');
+  const loading = document.getElementById('ats-loading');
+  const results = document.getElementById('ats-results');
+  if (uploadSection) uploadSection.classList.add('hidden');
+  if (loading) loading.classList.remove('hidden');
+  if (results) results.classList.add('hidden');
+  setTimeout(() => {
+    if (loading) loading.classList.add('hidden');
+    if (results) results.classList.remove('hidden');
+    const insights = [
+      { type: 'good', icon: '✅', title: 'Strong Action Verbs Detected', text: 'Your resume uses 8+ quantified achievement statements — great for ATS and human reviewers.' },
+      { type: 'good', icon: '✅', title: 'Clean, Parseable Format', text: 'Single-column layout with standard fonts ensures smooth parsing by ATS systems.' },
+      { type: 'warn', icon: '⚠️', title: 'Missing Key Skill Keywords', text: 'Add skills like "Agile", "Scrum", "REST API" or "Cloud Platforms" based on target JD.' },
+      { type: 'warn', icon: '⚠️', title: 'Summary Section Too Generic', text: 'Tailor your professional summary to include role-specific keywords from job descriptions.' },
+      { type: 'bad', icon: '❌', title: 'No LinkedIn Profile URL', text: 'Include your LinkedIn URL to increase recruiter engagement by 40%.' },
+    ];
+    const insightsList = document.getElementById('ats-insights-list');
+    if (insightsList) insightsList.innerHTML = insights.map(i => `
+      <div class="insight-item">
+        <div class="insight-icon ${i.type}">${i.icon}</div>
+        <div class="insight-text"><h4>${i.title}</h4><p>${i.text}</p></div>
+      </div>`).join('');
+    const keywords = [
+      { name: 'Technical Skills', score: 78 }, { name: 'Soft Skills', score: 65 },
+      { name: 'Industry Keywords', score: 54 }, { name: 'Role-Specific Terms', score: 82 },
+      { name: 'Quantified Achievements', score: 91 }
+    ];
+    const keywordBars = document.getElementById('keyword-bars');
+    if (keywordBars) keywordBars.innerHTML = keywords.map(k => `
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+          <span>${k.name}</span>
+          <span style="font-weight:700;color:${k.score >= 70 ? 'var(--green)' : k.score >= 50 ? '#F57F17' : '#c62828'}">${k.score}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${k.score}%;background:${k.score >= 70 ? 'linear-gradient(90deg,var(--green),#00c98c)' : k.score >= 50 ? 'linear-gradient(90deg,#F57F17,#FFB74D)' : 'linear-gradient(90deg,#e53935,#ef5350)'}"></div></div>
+      </div>`).join('');
+  }, 3500);
+}
+
+// ===== RESUME BUILDER =====
+let currentStep = 2;
+function goBuilderStep(step) {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById('builder-step-' + i);
+    if (el) el.classList.add('hidden');
+  }
+  const target = document.getElementById('builder-step-' + step);
+  if (target) target.classList.remove('hidden');
+  currentStep = step;
+  const steps = document.querySelectorAll('.builder-step');
+  steps.forEach((s, i) => {
+    s.className = 'builder-step';
+    if (i + 1 < step) s.classList.add('done');
+    else if (i + 1 === step) s.classList.add('active');
+  });
+}
+
+function updatePreview() {
+  const val = id => document.getElementById(id)?.value || '';
+  const el = id => document.getElementById(id);
+  const fname = val('rb-fname'), lname = val('rb-lname');
+  if (el('prev-name')) el('prev-name').textContent = (fname || lname) ? `${fname} ${lname}`.trim() : 'Your Name';
+  if (el('prev-contact')) el('prev-contact').textContent = [val('rb-email'), val('rb-phone'), val('rb-linkedin')].filter(Boolean).join(' | ') || 'email | phone | linkedin';
+  if (el('prev-summary')) el('prev-summary').textContent = val('rb-summary') || 'Your professional summary will appear here...';
+  if (el('prev-edu')) el('prev-edu').innerHTML = `<strong>${val('rb-college') || 'Your University'}</strong> – ${val('rb-degree') || 'Your Degree'}`;
+  if (el('prev-cgpa')) el('prev-cgpa').textContent = val('rb-cgpa') || 'CGPA';
+  if (el('prev-year')) el('prev-year').textContent = val('rb-year') || 'Year';
+  if (el('prev-exp')) el('prev-exp').innerHTML = `<strong>${val('rb-company') || 'Company'}</strong> – ${val('rb-role') || 'Role'}`;
+  if (el('prev-dates')) el('prev-dates').textContent = (val('rb-from') || val('rb-to')) ? `${val('rb-from')} – ${val('rb-to')}` : 'Dates';
+  if (el('prev-achievements')) el('prev-achievements').textContent = val('rb-achievements');
+  if (el('prev-skills')) el('prev-skills').textContent = val('rb-skills') || 'Technical & soft skills appear here';
+  if (el('prev-certs')) el('prev-certs').textContent = val('rb-certs');
+}
+
+// ===== QUIZ GAME =====
+const deptQuestions = {
+  cse: [
+    { q: "What does API stand for?", opts: ["Application Programming Interface", "Advanced Program Integration", "Applied Process Integration", "Automated Programming Interface"], ans: 0 },
+    { q: "Which data structure uses LIFO?", opts: ["Queue", "Stack", "Tree", "Graph"], ans: 1 },
+    { q: "What is the time complexity of binary search?", opts: ["O(n)", "O(n log n)", "O(log n)", "O(1)"], ans: 2 },
+  ],
+  it: [
+    { q: "What is a primary key?", opts: ["A unique identifier for a record", "A key used for encryption", "A foreign key reference", "A table index"], ans: 0 },
+    { q: "Which protocol is used for secure web traffic?", opts: ["HTTP", "FTP", "HTTPS", "SMTP"], ans: 2 },
+    { q: "What does DNS do?", opts: ["Resolves IP addresses to names", "Resolves domain names to IP addresses", "Secures network traffic", "Encrypts databases"], ans: 1 },
+  ],
+  ece: [
+    { q: "What is an operational amplifier?", opts: ["A logic gate", "A voltage amplifier", "A digital counter", "A memory cell"], ans: 1 },
+    { q: "What does VLSI stand for?", opts: ["Very Low Scale Integration", "Very Large Scale Integration", "Voltage Logic Signal Interface", "Variable Length Signal Input"], ans: 1 },
+    { q: "Which of these is a microcontroller?", opts: ["Pentium 4", "Intel Core i7", "8051", "ARM Cortex-A78"], ans: 2 },
+  ],
+  eee: [
+    { q: "What is the unit of electrical resistance?", opts: ["Volts", "Amperes", "Ohms", "Watts"], ans: 2 },
+    { q: "What does a transformer do?", opts: ["Converts AC to DC", "Converts DC to AC", "Steps up or steps down AC voltage", "Stores electrical energy"], ans: 2 },
+    { q: "According to Ohm's law, V = ?", opts: ["I/R", "R/I", "IR", "I^2R"], ans: 2 },
+  ],
+  mech: [
+    { q: "What is the study of fluids in motion?", opts: ["Thermodynamics", "Fluid Dynamics", "Statics", "Kinematics"], ans: 1 },
+    { q: "Which thermodynamic cycle describes a steam engine?", opts: ["Otto cycle", "Diesel cycle", "Rankine cycle", "Brayton cycle"], ans: 2 },
+    { q: "What is stress?", opts: ["Force per unit Area", "Mass per unit Volume", "Change in length per unit length", "Work per unit time"], ans: 0 },
+  ]
+};
+
+let quizState = { currentQ: 0, score: 0, dept: null, questions: [], timer: null, timeLeft: 10 };
+
+function startQuizForDept(dept) {
+  quizState.dept = dept;
+  quizState.questions = deptQuestions[dept] || deptQuestions['cse'];
+  quizState.currentQ = 0;
+  quizState.score = 0;
+  document.getElementById('quiz-step-dept').classList.add('hidden');
+  document.getElementById('quiz-step-questions').classList.remove('hidden');
+  loadNextQuizQuestion();
+}
+
+function loadNextQuizQuestion() {
+  if (quizState.currentQ >= quizState.questions.length) return finishQuiz();
+  quizState.timeLeft = 10;
+  document.getElementById('quiz-timer').textContent = quizState.timeLeft;
+  document.getElementById('q-current').textContent = quizState.currentQ + 1;
+  document.getElementById('q-total').textContent = quizState.questions.length;
+  const progressPct = ((quizState.currentQ) / quizState.questions.length) * 100;
+  document.getElementById('quiz-progress-bar').style.width = `${progressPct}%`;
+  const qObj = quizState.questions[quizState.currentQ];
+  document.getElementById('quiz-question').textContent = qObj.q;
+  const optsContainer = document.getElementById('quiz-options');
+  optsContainer.innerHTML = '';
+  qObj.opts.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-outline';
+    btn.style.cssText = 'width:100%; justify-content:flex-start; text-align:left; border-color:var(--grey-pale); color:var(--dark); font-weight:500; padding:12px 16px;';
+    btn.textContent = opt;
+    btn.onclick = () => checkQuizAnswer(idx, btn);
+    optsContainer.appendChild(btn);
+  });
+  clearInterval(quizState.timer);
+  quizState.timer = setInterval(() => {
+    quizState.timeLeft--;
+    document.getElementById('quiz-timer').textContent = quizState.timeLeft;
+    if (quizState.timeLeft <= 0) { clearInterval(quizState.timer); checkQuizAnswer(-1, null); }
+  }, 1000);
+}
+
+function checkQuizAnswer(selectedIdx, btnElement) {
+  clearInterval(quizState.timer);
+  const qObj = quizState.questions[quizState.currentQ];
+  const buttons = document.getElementById('quiz-options').querySelectorAll('button');
+  buttons.forEach(b => b.disabled = true);
+  if (selectedIdx === qObj.ans) {
+    quizState.score++;
+    if (btnElement) { btnElement.style.background = 'rgba(0,177,123,0.1)'; btnElement.style.borderColor = 'var(--green)'; btnElement.style.color = 'var(--green)'; }
+  } else {
+    if (btnElement) { btnElement.style.background = 'rgba(255,59,48,0.1)'; btnElement.style.borderColor = '#FF3B30'; btnElement.style.color = '#FF3B30'; }
+    buttons[qObj.ans].style.borderColor = 'var(--green)'; buttons[qObj.ans].style.color = 'var(--green)';
+  }
+  setTimeout(() => { quizState.currentQ++; loadNextQuizQuestion(); }, 1000);
+}
+
+function finishQuiz() {
+  document.getElementById('quiz-step-questions').classList.add('hidden');
+  document.getElementById('quiz-step-result').classList.remove('hidden');
+  const scaledScore = Math.round((quizState.score / quizState.questions.length) * 25);
+  document.getElementById('quiz-final-score').textContent = scaledScore;
+}
+
+function redirectQuizToCourses() {
+  closeModal('modal-quiz');
+  showTab('courses');
+  const filterBtn = document.querySelector(`.dept-btn[onclick*="'${quizState.dept}'"]`);
+  if (filterBtn) filterBtn.click();
+}
+
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.remove('hidden');
+    if (id === 'modal-quiz') {
+      document.getElementById('quiz-step-dept').classList.remove('hidden');
+      document.getElementById('quiz-step-questions').classList.add('hidden');
+      document.getElementById('quiz-step-result').classList.add('hidden');
+    }
+    if (id === 'modal-interview') {
+      document.getElementById('interview-step-dept').classList.remove('hidden');
+      document.getElementById('interview-step-chat').classList.add('hidden');
+      document.getElementById('interview-step-result').classList.add('hidden');
+      clearInterviewTimer();
+    }
+    if (id === 'modal-aptitude') {
+      document.getElementById('aptitude-step-intro').classList.remove('hidden');
+      document.getElementById('aptitude-step-challenge').classList.add('hidden');
+      document.getElementById('aptitude-footer').classList.add('hidden');
+      clearAptitudeTimer();
+    }
+  }
+}
+
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('hidden');
+    if (id === 'modal-quiz') clearInterval(quizState.timer);
+    if (id === 'modal-interview') clearInterviewTimer();
+    if (id === 'modal-aptitude') clearAptitudeTimer();
+  }
+}
+
+// ===== MOCK INTERVIEW =====
+const interviewData = {
+  cse: ["Tell me about a time you debugged a complex issue.", "Explain the difference between REST and GraphQL.", "How do you handle state in a React application?"],
+  it: ["What is your process for troubleshooting a network issue?", "How do you ensure data security in a web application?", "Describe a time you worked with a cloud platform."],
+  ece: ["Explain how a multiplexer works.", "What challenges have you faced in PCB design?", "How would you optimize power consumption in a circuit?"],
+  eee: ["Describe the function of a relay.", "How do you analyze a power distribution system?", "Explain the principle of electromagnetic induction."],
+  mech: ["What are the key considerations in material selection?", "How do you approach a thermal analysis problem?", "Describe a CAD project you worked on recently."]
+};
+
+let intState = { dept: null, qIndex: 0, timer: null, timeLeft: 300, messages: [] };
+
+function startInterviewForDept(dept) {
+  intState.dept = dept;
+  intState.qIndex = 0;
+  intState.timeLeft = 300;
+  intState.messages = [];
+  document.getElementById('interview-step-dept').classList.add('hidden');
+  document.getElementById('interview-step-chat').classList.remove('hidden');
+  const chatArea = document.getElementById('interview-chat-area');
+  chatArea.innerHTML = '';
+  startInterviewTimer();
+  appendInterviewMessage('bot', `Hi! I'm your mock interviewer for ${dept.toUpperCase()}. Let's get started. ${interviewData[dept][0]}`);
+}
+
+function appendInterviewMessage(sender, text) {
+  const chatArea = document.getElementById('interview-chat-area');
+  const msgDiv = document.createElement('div');
+  msgDiv.style.cssText = `max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; ${sender === 'user' ? 'align-self:flex-end; background:var(--green); color:#fff;' : 'align-self:flex-start; background:#fff; color:var(--dark); border:1px solid var(--grey-pale);'}`;
+  msgDiv.textContent = text;
+  chatArea.appendChild(msgDiv);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function handleInterviewKeyPress(e) {
+  if (e.key === 'Enter') sendInterviewMessage();
+}
+
+function sendInterviewMessage() {
+  const input = document.getElementById('interview-input');
+  const text = input.value.trim();
+  if (!text) return;
+  appendInterviewMessage('user', text);
+  input.value = '';
+  intState.qIndex++;
+  setTimeout(() => botInterviewReply(), 800);
+}
+
+function botInterviewReply() {
+  const questions = interviewData[intState.dept] || interviewData['cse'];
+  if (intState.qIndex < questions.length) {
+    appendInterviewMessage('bot', `Good point. Next question: ${questions[intState.qIndex]}`);
+  } else {
+    appendInterviewMessage('bot', "Thank you! That concludes our mock interview. Generating feedback...");
+    setTimeout(() => finishInterview(), 1500);
+  }
+}
+
+function startInterviewTimer() {
+  clearInterval(intState.timer);
+  intState.timer = setInterval(() => {
+    intState.timeLeft--;
+    const m = Math.floor(intState.timeLeft / 60).toString().padStart(2, '0');
+    const s = (intState.timeLeft % 60).toString().padStart(2, '0');
+    document.getElementById('interview-timer').textContent = `${m}:${s}`;
+    if (intState.timeLeft <= 0) finishInterview();
+  }, 1000);
+}
+
+function clearInterviewTimer() { clearInterval(intState.timer); }
+
+function finishInterview() {
+  clearInterviewTimer();
+  document.getElementById('interview-step-chat').classList.add('hidden');
+  document.getElementById('interview-step-result').classList.remove('hidden');
+  setTimeout(() => {
+    if (!document.getElementById('modal-interview').classList.contains('hidden')) {
+      redirectInterviewToCourses();
+    }
+  }, 4000);
+}
+
+function redirectInterviewToCourses() {
+  closeModal('modal-interview');
+  showTab('courses');
+}
+
+// ===== APTITUDE CHALLENGE =====
+const aptitudeQuestions = [
+  { q: "If a train 120m long passes a telegraph pole in 6 seconds, what is its speed?", ans: "72 km/hr", exp: "Speed = Distance/Time = 120/6 = 20 m/s. Convert to km/hr: 20 * (18/5) = 72 km/hr." },
+  { q: "What is the next number in the series: 2, 6, 12, 20, 30, ...?", ans: "42", exp: "Differences are 4, 6, 8, 10. Next difference is 12. So, 30 + 12 = 42." },
+  { q: "A can do a piece of work in 10 days and B can do it in 15 days. How long will they take together?", ans: "6 days", exp: "A's 1 day work = 1/10. B's 1 day work = 1/15. Together = 1/10 + 1/15 = 1/6. Total = 6 days." },
+  { q: "If 15% of x is 45, what is x?", ans: "300", exp: "0.15 * x = 45 => x = 45 / 0.15 = 300." },
+  { q: "Find the average of first 5 multiples of 3.", ans: "9", exp: "Multiples: 3, 6, 9, 12, 15. Average = 45/5 = 9." }
+];
+
+let aptTimer = null;
+let aptTimeLeft = 600;
+
+function startAptitudeChallenge() {
+  document.getElementById('aptitude-step-intro').classList.add('hidden');
+  document.getElementById('aptitude-step-challenge').classList.remove('hidden');
+  const qArea = document.getElementById('aptitude-q-area');
+  qArea.innerHTML = '';
+  aptitudeQuestions.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.style.cssText = 'background:#fff; border:1px solid var(--grey-pale); border-radius:12px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.02);';
+    card.innerHTML = `
+      <div style="font-size:12px; color:var(--grey-mid); font-weight:700; margin-bottom:8px;">Question ${idx + 1}</div>
+      <p style="font-size:15px; font-weight:600; margin-bottom:16px;">${item.q}</p>
+      <div style="background:rgba(0,177,123,0.05); padding:12px; border-radius:8px; border-left:3px solid var(--green);">
+        <div style="font-size:13px; font-weight:700; color:var(--green); margin-bottom:4px;">Answer: ${item.ans}</div>
+        <div style="font-size:13px; color:var(--grey-mid);">${item.exp}</div>
+      </div>`;
+    qArea.appendChild(card);
+  });
+  document.getElementById('aptitude-footer').classList.remove('hidden');
+  aptTimeLeft = 600;
+  clearInterval(aptTimer);
+  aptTimer = setInterval(() => {
+    aptTimeLeft--;
+    const m = Math.floor(aptTimeLeft / 60).toString().padStart(2, '0');
+    const s = (aptTimeLeft % 60).toString().padStart(2, '0');
+    document.getElementById('aptitude-timer').textContent = `${m}:${s}`;
+    if (aptTimeLeft <= 0) clearAptitudeTimer();
+  }, 1000);
+}
+
+function clearAptitudeTimer() { clearInterval(aptTimer); }
+
+// ===== ENROLL MODAL =====
+function openEnrollModal(courseName) {
+  const form = document.getElementById('enroll-step-form');
+  const success = document.getElementById('enroll-step-success');
+  if (form) form.classList.remove('hidden');
+  if (success) success.classList.add('hidden');
+  const courseInput = document.getElementById('en-course');
+  if (courseInput && courseName && courseName !== 'General') courseInput.value = courseName;
+  openModal('modal-enroll');
+}
+
+function submitAutoEnrolment() {
+  const name = document.getElementById('ae-name')?.value?.trim();
+  const email = document.getElementById('ae-email')?.value?.trim();
+  const phone = document.getElementById('ae-phone')?.value?.trim();
+  if (!name || !email || !phone) { showToast('Please fill in Name, Email and Phone!', 'error'); return; }
+  silentWhatsAppTrigger(name, email, phone);
+  const form = document.getElementById('auto-enroll-step-form');
+  const success = document.getElementById('auto-enroll-step-success');
+  if (form) form.classList.add('hidden');
+  if (success) success.classList.remove('hidden');
+}
+
+function silentWhatsAppTrigger(name, email, phone) {
+  console.log('Sending background notification for', name, email, phone);
+}
+
+function submitEnrolment() {
+  const name = document.getElementById('en-name')?.value?.trim();
+  const dept = document.getElementById('en-dept')?.value?.trim();
+  const course = document.getElementById('en-course')?.value?.trim();
+  const phone = document.getElementById('en-phone')?.value?.trim();
+  const email = document.getElementById('en-email')?.value?.trim();
+  if (!name || !phone || !email) { showToast('Please fill in Name, Phone and Email!', 'error'); return; }
+  const data = { studentName: name, department: dept || 'Not specified', domainCourse: course || 'Not specified', mobileNumber: phone, emailId: email };
+  try { sendToWhatsApp(data); } catch (error) { }
+  const form = document.getElementById('enroll-step-form');
+  const success = document.getElementById('enroll-step-success');
+  if (form) form.classList.add('hidden');
+  if (success) success.classList.remove('hidden');
+}
+
+function sendToWhatsApp(data) {
+  console.log('Sending to WhatsApp securely in background:', data);
+}
+
+// ===== JUNIOR COURSES =====
+const jrCourses = [
+  { title: 'Scratch Programming', grade: 'primary', emoji: '🐱', desc: 'Visual block-based coding with Scratch — create games and animations!', duration: '6 weeks' },
+  { title: 'Curious Science Lab', grade: 'primary', emoji: '🔬', desc: 'Fun science experiments and STEM discovery activities for curious minds.', duration: '8 weeks' },
+  { title: 'Story Telling & Drama', grade: 'primary', emoji: '🎭', desc: 'Creative writing, storytelling and dramatic expression for young learners.', duration: '4 weeks' },
+  { title: 'Python for Teens', grade: 'middle', emoji: '🐍', desc: 'Introduction to Python programming with fun mini-projects and games.', duration: '10 weeks' },
+  { title: 'Public Speaking & Debate', grade: 'middle', emoji: '🎤', desc: 'Overcome stage fear and master the art of persuasive communication.', duration: '8 weeks' },
+  { title: 'Financial Literacy Jr.', grade: 'middle', emoji: '💰', desc: 'Money, savings, budgeting and basic investment concepts for teens.', duration: '6 weeks' },
+  { title: 'Web Design Basics', grade: 'secondary', emoji: '🌐', desc: 'HTML, CSS and simple JavaScript to create your first website.', duration: '10 weeks' },
+  { title: 'Career Discovery Program', grade: 'secondary', emoji: '🗺️', desc: 'Explore 50+ career paths with aptitude tests and industry interactions.', duration: '8 weeks' },
+  { title: 'Leadership & Entrepreneurship', grade: 'secondary', emoji: '🚀', desc: 'Business thinking, team leadership and mini startup challenge.', duration: '10 weeks' },
+  { title: 'Advanced Python & Data', grade: 'senior', emoji: '📊', desc: 'Data analysis, visualization and intro to machine learning concepts.', duration: '12 weeks' },
+  { title: 'Communication for Campus', grade: 'senior', emoji: '🎯', desc: 'Interview prep, GD skills and professional communication for college readiness.', duration: '8 weeks' },
+  { title: 'Digital Marketing Basics', grade: 'senior', emoji: '📱', desc: 'Social media, content creation and digital marketing fundamentals.', duration: '8 weeks' },
+];
+
+function renderJrCourses(filter) {
+  const el = document.getElementById('jr-courses-list');
+  if (!el) return;
+  const filtered = filter === 'all' ? jrCourses : jrCourses.filter(c => c.grade === filter);
+  el.innerHTML = filtered.map(c => `
+    <div class="course-card">
+      <div class="course-card-img" style="background:linear-gradient(135deg,var(--green),#00c98c)">
+        <span>${c.emoji}</span>
+        <span class="dept-tag">${c.grade.charAt(0).toUpperCase() + c.grade.slice(1)}</span>
+      </div>
+      <div class="course-card-body">
+        <h3>${c.title}</h3><p>${c.desc}</p>
+        <div class="course-meta"><span class="duration">⏱ ${c.duration}</span><span class="course-level level-beginner">Jr. Program</span></div>
+        <div style="display:flex; gap:8px; margin-top:16px;">
+          <button class="btn btn-outline" style="flex:1; justify-content:center; font-size:13px; padding: 10px 0;"
+            onclick="openSyllabusModal('${c.title.replace(/'/g, "\\'")}', true)">Syllabus</button>
+          <button class="btn btn-primary" style="flex:1; justify-content:center; font-size:13px; padding: 10px 0;"
+            onclick="showToast('Enrolling in ${c.title.replace(/'/g, '')}! 🌱','success')">Join Program →</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterGrades(grade, btn) {
+  document.querySelectorAll('#grade-filter .dept-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderJrCourses(grade);
+}
+
+// ===== TOAST =====
+function showToast(msg, type = '') {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.className = `toast ${type}`;
+  toast.classList.remove('hidden', 'hide');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => {
+    toast.classList.add('hide');
+    setTimeout(() => toast.classList.add('hidden'), 400);
+  }, 3500);
+}
+
+// ===== PROMO STRIP =====
+const promoTexts = [
+  "🎯 Try our Free Trial Tutorial Courses today! →",
+  "🎥 Access 50+ Pre-Recorded Video Courses! →",
+  "⚡ Master new skills at your own pace! →",
+  "⭐ Start your free trial tutorial now! →"
+];
+let currentPromoIdx = 0;
+
+function initPromoStrip() {
+  const content = document.getElementById('promo-strip-content');
+  if (!content) return;
+  setInterval(() => {
+    content.classList.add('fade-out');
+    setTimeout(() => {
+      currentPromoIdx = (currentPromoIdx + 1) % promoTexts.length;
+      content.innerHTML = `<span>${promoTexts[currentPromoIdx]}</span>`;
+      content.classList.remove('fade-out');
+    }, 400);
+  }, 4000);
+}
+
+// ===== DOMContentLoaded =====
+document.addEventListener('DOMContentLoaded', () => {
+  renderCourses();
+  renderHomeCourses();
+  initPromoStrip();
+});
+
+// ===== YOUTUBE GALLERY =====
+let ytCurrentVid = '';
+let ytCurrentTitle = '';
+
+function openYTModal(videoId, title, tag) {
+  ytCurrentVid = videoId;
+  ytCurrentTitle = title;
+  const iframe = document.getElementById('yt-iframe');
+  if (iframe) {
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&color=white`;
+  }
+  const titleEl = document.getElementById('yt-modal-title');
+  const tagEl = document.getElementById('yt-modal-tag');
+  if (titleEl) titleEl.textContent = title;
+  if (tagEl) tagEl.textContent = tag;
+  const overlay = document.getElementById('yt-modal');
+  if (overlay) {
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  if (window.gsap) {
+    gsap.fromTo('.yt-modal-box',
+      { scale: 0.88, opacity: 0, y: 30 },
+      { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: 'back.out(1.7)' }
+    );
+  }
+}
+
+function closeYTModal(event, force) {
+  if (!force && event && event.target !== document.getElementById('yt-modal')) return;
+  const iframe = document.getElementById('yt-iframe');
+  if (iframe) iframe.src = '';
+  const overlay = document.getElementById('yt-modal');
+  if (overlay) {
+    if (window.gsap) {
+      gsap.to('.yt-modal-box', {
+        scale: 0.9, opacity: 0, y: 20, duration: 0.25, ease: 'power2.in',
+        onComplete: () => {
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+}
+
+function openYTDirect() {
+  if (ytCurrentVid) {
+    window.open(`https://youtu.be/${ytCurrentVid}`, '_blank', 'noopener,noreferrer');
+  }
+}
+
+function initYTGallery() {
+  document.querySelectorAll('.yt-card').forEach(card => {
+    card.addEventListener('click', function () {
+      const vid = this.dataset.vid;
+      const title = this.dataset.title;
+      const tag = this.querySelector('.yt-tag')?.textContent || 'Video';
+      if (!vid || vid.startsWith('VIDEO_ID')) {
+        showToast('🎬 Video coming soon — stay tuned!', '');
+        return;
+      }
+      openYTModal(vid, title, tag);
+      if (window.gsap) {
+        gsap.timeline()
+          .to(this, { scale: 0.93, duration: 0.1, ease: 'power1.in' })
+          .to(this, { scale: 1.0, duration: 0.4, ease: 'back.out(2)' });
+      }
+    });
+
+    if (window.gsap) {
+      card.addEventListener('mouseenter', function () {
+        gsap.to(this, { rotateY: 6, rotateX: -4, scale: 1.05, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+      });
+      card.addEventListener('mouseleave', function () {
+        gsap.to(this, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' });
+      });
+      card.addEventListener('mousemove', function (e) {
+        const rect = this.getBoundingClientRect();
+        const dx = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+        const dy = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+        gsap.to(this, { rotateY: dx * 10, rotateX: -dy * 10, duration: 0.2, ease: 'power1.out', overwrite: 'auto' });
+      });
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeYTModal(null, true);
+  });
+}
+
+function animateYTGalleryEntrance() {
+  if (!window.gsap) return;
+  const cards = document.querySelectorAll('.yt-card');
+  if (!cards.length) return;
+  gsap.fromTo(cards,
+    { opacity: 0, y: 32, scale: 0.88, rotateZ: -3 },
+    { opacity: 1, y: 0, scale: 1, rotateZ: 0, duration: 0.65, ease: 'back.out(1.7)', stagger: 0.12, delay: 0.3 }
+  );
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initYTGallery();
+});
+
+// Hook showTab for YT gallery entrance
+setTimeout(() => {
+  const originalShowTab = showTab;
+  window.showTab = function (tab) {
+    originalShowTab(tab);
+    if (tab === 'home') {
+      setTimeout(animateYTGalleryEntrance, 200);
+    }
+  };
+}, 0);
+
+// ===== INSTITUTION PORTAL — GSAP INIT =====
+function initInstitutionPortal() {
+  if (!window.gsap) {
+    if (!document.querySelector('script[src*="gsap"]')) {
+      const s1 = document.createElement('script');
+      s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+      s1.onload = () => {
+        const s2 = document.createElement('script');
+        s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
+        s2.onload = () => {
+          gsap.registerPlugin(ScrollTrigger);
+          initInstHeroGSAP();
+        };
+        document.head.appendChild(s2);
+      };
+      document.head.appendChild(s1);
+    } else {
+      initInstHeroFallback();
+    }
+  } else {
+    gsap.registerPlugin(ScrollTrigger);
+    initInstHeroGSAP();
+  }
+}
+
+function initInstHeroGSAP() {
+  if (!window.gsap) return;
+
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  gsap.set(['#ih-eyebrow', '#ih-headline', '#ih-sub', '#ih-chips', '#ih-actions'], { opacity: 0, y: 30 });
+  gsap.set('#ih-right', { opacity: 0, x: 40 });
+
+  tl.to('#ih-eyebrow', { opacity: 1, y: 0, duration: 0.7 })
+    .to('#ih-headline', { opacity: 1, y: 0, duration: 0.9, stagger: 0.2 }, '-=0.4')
+    .to('#ih-sub', { opacity: 1, y: 0, duration: 0.7 }, '-=0.6')
+    .to('#ih-chips', { opacity: 1, y: 0, duration: 0.6 }, '-=0.5')
+    .to('#ih-actions', { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+    .to('#ih-right', { opacity: 1, x: 0, duration: 0.9, onComplete: animateInstCounters }, '-=0.8');
+
+  if (window.ScrollTrigger) {
+    gsap.fromTo('#it-tag', { opacity: 0, y: 20 }, { scrollTrigger: { trigger: '#inst-tieups', start: 'top 80%' }, opacity: 1, y: 0, duration: 0.6 });
+    gsap.fromTo('#it-title', { opacity: 0, y: 20 }, { scrollTrigger: { trigger: '#inst-tieups', start: 'top 80%' }, opacity: 1, y: 0, duration: 0.6, delay: 0.2 });
+    gsap.fromTo('#it-desc', { opacity: 0, y: 20 }, { scrollTrigger: { trigger: '#inst-tieups', start: 'top 80%' }, opacity: 1, y: 0, duration: 0.6, delay: 0.4 });
+    gsap.fromTo('#it-marquee', { opacity: 0 }, { scrollTrigger: { trigger: '#inst-tieups', start: 'top 70%' }, opacity: 1, duration: 1, delay: 0.6 });
+    gsap.fromTo('.inst-service-card', { opacity: 0, y: 40 }, { scrollTrigger: { trigger: '#inst-services', start: 'top 75%' }, opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: 'power2.out' });
+    gsap.fromTo('.ev-left-col', { opacity: 0, x: -50 }, { scrollTrigger: { trigger: '#inst-ev', start: 'top 75%' }, opacity: 1, x: 0, duration: 0.8, ease: 'power2.out' });
+    gsap.fromTo('.ev-right-col', { opacity: 0, x: 50 }, { scrollTrigger: { trigger: '#inst-ev', start: 'top 75%' }, opacity: 1, x: 0, duration: 0.8, ease: 'power2.out', delay: 0.2 });
+    gsap.fromTo('.ev-time-item', { opacity: 0, x: -20 }, { scrollTrigger: { trigger: '.ev-timeline', start: 'top 85%' }, opacity: 1, x: 0, duration: 0.6, stagger: 0.2 });
+    gsap.fromTo('.inst-article-card', { opacity: 0, y: 40 }, { scrollTrigger: { trigger: '#inst-articles-grid', start: 'top 80%' }, opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out' });
+  }
+}
+
+function animateInstCounters() {
+  document.querySelectorAll('#page-institution .inst-stat-num[data-target]').forEach(el => {
+    if (el.dataset.animated) return;
+    el.dataset.animated = '1';
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      const display = target >= 1000
+        ? Math.round(current / 1000) + 'K' + suffix.replace('K+', '+')
+        : Math.round(current) + suffix;
+      el.textContent = display;
+      if (current >= target) clearInterval(timer);
+    }, 16);
+    el.closest('.inst-stat-card')?.querySelector('.inst-stat-bar-fill')?.classList.add('animated');
+  });
+}
+
+function initInstHeroFallback() {
+  ['ih-eyebrow', 'ih-headline', 'ih-sub', 'ih-chips', 'ih-actions', 'ih-right'].forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.transition = `opacity 0.7s ease ${i * 0.15}s, transform 0.7s ease ${i * 0.15}s`;
+    el.style.transform = 'translateY(20px)';
+    setTimeout(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, 100 + i * 150);
+  });
+  setTimeout(animateInstCounters, 800);
+}
+
+// ===== PARTNERSHIPS PAGE — GSAP INIT =====
+function initPartnersSection() {
+  // ✅ FIX: Target #page-inst-partners instead of #inst-partners (now a separate page)
+  const section = document.getElementById('page-inst-partners');
+  if (!section) return;
+
+  // Load GSAP if needed
+  if (!window.gsap) {
+    if (!document.querySelector('script[src*="gsap"]')) {
+      const s1 = document.createElement('script');
+      s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+      s1.onload = () => {
+        const s2 = document.createElement('script');
+        s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
+        s2.onload = () => {
+          gsap.registerPlugin(ScrollTrigger);
+          _runPartnersGSAP(section);
+        };
+        document.head.appendChild(s2);
+      };
+      document.head.appendChild(s1);
+    }
     return;
   }
-  const overlay = document.getElementById('full-gallery-overlay');
-  if (overlay && overlay.style.opacity === '1') {
-    if (e.key === 'Escape') closeFullGallery();
-  }
-});
+
+  gsap.registerPlugin(ScrollTrigger);
+  _runPartnersGSAP(section);
+}
+
+function _runPartnersGSAP(section) {
+  if (!window.gsap) return;
+
+  // Reset animated flags so counters re-run each time page opens
+  section.querySelectorAll('.pstat-num[data-target]').forEach(el => {
+    delete el.dataset.animated;
+  });
+
+  gsap.set(['#p-eyebrow', '#p-headline', '#p-subtext', '#p-stats', '#p-scroll-hint'], {
+    opacity: 0, y: 36, filter: 'blur(4px)'
+  });
+
+  gsap.timeline({ defaults: { ease: 'power3.out' } })
+    .to('#p-eyebrow', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75 }, 0.1)
+    .to('#p-headline', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1.0 }, 0.35)
+    .to('#p-subtext', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.75 }, 0.65)
+    .to('#p-stats', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7 }, 0.85)
+    .to('#p-scroll-hint', { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.6 }, 1.1);
+
+  // Counter animation
+  setTimeout(() => {
+    section.querySelectorAll('.pstat-num[data-target]').forEach(el => {
+      if (el.dataset.animated) return;
+      el.dataset.animated = '1';
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      let current = 0;
+      const steps = 1800 / 16;
+      const increment = target / steps;
+      const timer = setInterval(() => {
+        current = Math.min(current + increment, target);
+        if (suffix === 'K+') el.textContent = Math.round(current / 1000) + 'K+';
+        else if (suffix) el.textContent = Math.round(current) + suffix;
+        else el.textContent = Math.round(current);
+        if (current >= target) clearInterval(timer);
+      }, 16);
+    });
+  }, 900);
+
+  gsap.fromTo('#p-label', { opacity: 0, y: 20 }, {
+    opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+    scrollTrigger: { trigger: '#p-label', start: 'top 88%' }
+  });
+
+  section.querySelectorAll('.partner-card').forEach((card, i) => {
+    gsap.fromTo(card, { opacity: 0, y: 30, scale: 0.97 }, {
+      opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out',
+      delay: (i % 3) * 0.08,
+      scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' }
+    });
+  });
+
+  section.querySelectorAll('.pdl-orb').forEach((orb, i) => {
+    const speed = [0.10, 0.07, 0.13][i] || 0.09;
+    gsap.to(orb, {
+      y: () => -(window.innerHeight * speed), ease: 'none',
+      scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: 2 }
+    });
+  });
+
+  gsap.fromTo('#p-cta', { opacity: 0, y: 40 }, {
+    opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
+    scrollTrigger: { trigger: '#p-cta', start: 'top 85%' }
+  });
+
+  // Mouse interactions for partner cards
+  section.querySelectorAll('.partner-card').forEach(card => {
+    const inner = card.querySelector('.partner-card-inner');
+    if (!inner) return;
+    card.addEventListener('mouseenter', () => gsap.to(inner, { y: -3, duration: 0.35, ease: 'power2.out', overwrite: 'auto' }));
+    card.addEventListener('mouseleave', () => gsap.to(inner, { y: 0, duration: 0.55, ease: 'elastic.out(1, 0.65)', overwrite: 'auto' }));
+    const logo = card.querySelector('.partner-logo-box');
+    if (!logo) return;
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const dx = (e.clientX - rect.left - rect.width / 2) / rect.width * 8;
+      const dy = (e.clientY - rect.top - rect.height / 2) / rect.height * 8;
+      gsap.to(logo, { x: dx, y: dy, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+    });
+    card.addEventListener('mouseleave', () => gsap.to(logo, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' }));
+  });
+
+}
